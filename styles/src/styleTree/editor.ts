@@ -1,10 +1,5 @@
-import { fontWeights } from "../common";
 import { withOpacity } from "../utils/color";
-import {
-  ColorScheme,
-  Layer,
-  StyleSets,
-} from "../themes/common/colorScheme";
+import { ColorScheme, Layer, StyleSets } from "../themes/common/colorScheme";
 import {
   background,
   border,
@@ -13,8 +8,6 @@ import {
   text,
 } from "./components";
 import hoverPopover from "./hoverPopover";
-import { Syntax } from "../themes/common/theme";
-import buildSyntax from "../themes/common/syntax";
 
 export default function editor(colorScheme: ColorScheme) {
   let layer = colorScheme.highest;
@@ -47,7 +40,7 @@ export default function editor(colorScheme: ColorScheme) {
     };
   }
 
-  const syntax = colorScheme.syntax
+  const syntax = colorScheme.syntax;
 
   return {
     textColor: syntax.primary.color,
@@ -185,9 +178,9 @@ export default function editor(colorScheme: ColorScheme) {
         background: withOpacity(background(layer, "inverted"), 0.4),
         border: {
           width: 1,
-          color: borderColor(layer, 'variant'),
+          color: borderColor(layer, "variant"),
         },
-      }
+      },
     },
     compositionMark: {
       underline: {
