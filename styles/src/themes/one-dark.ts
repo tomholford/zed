@@ -1,7 +1,6 @@
 import chroma from "chroma-js";
 import { colorRamp, createColorScheme } from "./common/ramps";
-import { SyntaxHighlightStyle } from "./common/theme";
-import { SyntaxOverrides, ThemeConfig } from "./common/themeConfig";
+import { ThemeConfig } from "./common/themeConfig";
 
 const ramps = {
   neutral: chroma
@@ -53,7 +52,7 @@ export const theme: ThemeConfig = {
     primary: { color: color.white },
     comment: { color: color.grey },
     function: { color: color.blue },
-    type: { color: color.cyan },
+    type: { color: color.teal },
     property: { color: color.red },
     number: { color: color.orange },
     string: { color: color.green },
@@ -64,9 +63,41 @@ export const theme: ThemeConfig = {
   },
 };
 
-export const dark = createColorScheme(
-  `${theme.meta.name}`,
-  false,
-  ramps,
-  theme
-);
+export const variants = [
+  createColorScheme(
+    `${theme.meta.name} Alpha`,
+    false,
+    ramps,
+    theme
+  ),
+  createColorScheme(
+    `${theme.meta.name} Beta`,
+    false,
+    ramps,
+    theme
+  ),
+  createColorScheme(
+    `${theme.meta.name} Gamma`,
+    false,
+    ramps,
+    theme
+  ),
+  createColorScheme(
+    `${theme.meta.name} Delta`,
+    false,
+    ramps,
+    theme
+  ),
+  createColorScheme(
+    `${theme.meta.name} Foo`,
+    false,
+    ramps,
+    theme
+  ),
+  createColorScheme(
+    `${theme.meta.name} Baz`,
+    false,
+    ramps,
+    theme
+  )
+]

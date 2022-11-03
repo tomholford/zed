@@ -20,6 +20,11 @@ function fillColorSchemes(themesPath: string, colorSchemes: ColorScheme[]) {
       const colorScheme = require(filePath);
       if (colorScheme.dark) colorSchemes.push(colorScheme.dark);
       if (colorScheme.light) colorSchemes.push(colorScheme.light);
+      if (colorScheme.variants) {
+        colorScheme.variants.map((variant: ColorScheme) => {
+          colorSchemes.push(variant)
+        })
+      };
     }
   }
 }
