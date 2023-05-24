@@ -3,7 +3,7 @@ import { withOpacity } from "../utils/color"
 import { text, border, background, foreground } from "./components"
 
 export default function tabBar(colorScheme: ColorScheme) {
-    const height = 32
+    const height = 27
 
     let activeLayer = colorScheme.highest
     let layer = colorScheme.middle
@@ -18,13 +18,13 @@ export default function tabBar(colorScheme: ColorScheme) {
             overlay: true,
         }),
         padding: {
-            left: 8,
-            right: 12,
+            left: 2,
+            right: 2,
         },
-        spacing: 8,
+        spacing: 6,
 
         // Tab type icons (e.g. Project Search)
-        typeIconWidth: 14,
+        typeIconWidth: 11,
 
         // Close icons
         closeIconWidth: 8,
