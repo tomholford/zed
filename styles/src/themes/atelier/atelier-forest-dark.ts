@@ -1,31 +1,31 @@
 import chroma from "chroma-js"
-import { Meta } from "./common/colorScheme"
-import { colorRamp, createColorScheme } from "./common/ramps"
-import { metaCommon, name, buildSyntax, Variant } from "./common/atelier-common"
+import { Meta } from "../common/colorScheme"
+import { colorRamp, createColorScheme } from "../common/ramps"
+import { metaCommon, name, buildSyntax, Variant } from "./atelier-common"
 
 const variant: Variant = {
     meta: {
-        name: `${name} Estuary Dark`,
+        name: `${name} Forest Dark`,
         ...metaCommon,
-        url: "https://atelierbram.github.io/syntax-highlighting/atelier-schemes/estuary/",
+        url: "https://atelierbram.github.io/syntax-highlighting/atelier-schemes/forest/",
     },
     colors: {
-        base00: "#22221b",
-        base01: "#302f27",
-        base02: "#5f5e4e",
-        base03: "#6c6b5a",
-        base04: "#878573",
-        base05: "#929181",
-        base06: "#e7e6df",
-        base07: "#f4f3ec",
-        base08: "#ba6236",
-        base09: "#ae7313",
-        base0A: "#a5980d",
-        base0B: "#7d9726",
-        base0C: "#5b9d48",
-        base0D: "#36a166",
-        base0E: "#5f9182",
-        base0F: "#9d6c7c",
+        base00: "#1b1918",
+        base01: "#2c2421",
+        base02: "#68615e",
+        base03: "#766e6b",
+        base04: "#9c9491",
+        base05: "#a8a19f",
+        base06: "#e6e2e0",
+        base07: "#f1efee",
+        base08: "#f22c40",
+        base09: "#df5320",
+        base0A: "#c38418",
+        base0B: "#7b9726",
+        base0C: "#3d97b8",
+        base0D: "#407ee7",
+        base0E: "#6666ea",
+        base0F: "#c33ff3",
     },
 }
 

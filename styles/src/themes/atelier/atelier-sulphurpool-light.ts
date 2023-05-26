@@ -1,31 +1,31 @@
 import chroma from "chroma-js"
-import { Meta } from "./common/colorScheme"
-import { colorRamp, createColorScheme } from "./common/ramps"
-import { metaCommon, name, buildSyntax, Variant } from "./common/atelier-common"
+import { Meta } from "../common/colorScheme"
+import { colorRamp, createColorScheme } from "../common/ramps"
+import { metaCommon, name, buildSyntax, Variant } from "./atelier-common"
 
 const variant: Variant = {
     meta: {
-        name: `${name} Forest Light`,
+        name: `${name} Sulphurpool Light`,
         ...metaCommon,
-        url: "https://atelierbram.github.io/syntax-highlighting/atelier-schemes/forest/",
+        url: "https://atelierbram.github.io/syntax-highlighting/atelier-schemes/sulphurpool/",
     },
     colors: {
-        base00: "#f1efee",
-        base01: "#e6e2e0",
-        base02: "#a8a19f",
-        base03: "#9c9491",
-        base04: "#766e6b",
-        base05: "#68615e",
-        base06: "#2c2421",
-        base07: "#1b1918",
-        base08: "#f22c40",
-        base09: "#df5320",
-        base0A: "#c38418",
-        base0B: "#7b9726",
-        base0C: "#3d97b8",
-        base0D: "#407ee7",
-        base0E: "#6666ea",
-        base0F: "#c33ff3",
+        base00: "#f5f7ff",
+        base01: "#dfe2f1",
+        base02: "#979db4",
+        base03: "#898ea4",
+        base04: "#6b7394",
+        base05: "#5e6687",
+        base06: "#293256",
+        base07: "#202746",
+        base08: "#c94922",
+        base09: "#c76b29",
+        base0A: "#c08b30",
+        base0B: "#ac9739",
+        base0C: "#22a2c9",
+        base0D: "#3d8fd1",
+        base0E: "#6679cc",
+        base0F: "#9c637a",
     },
 }
 

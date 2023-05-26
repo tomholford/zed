@@ -1,31 +1,31 @@
 import chroma from "chroma-js"
-import { Meta } from "./common/colorScheme"
-import { colorRamp, createColorScheme } from "./common/ramps"
-import { metaCommon, name, buildSyntax, Variant } from "./common/atelier-common"
+import { Meta } from "../common/colorScheme"
+import { colorRamp, createColorScheme } from "../common/ramps"
+import { metaCommon, name, buildSyntax, Variant } from "./atelier-common"
 
 const variant: Variant = {
     meta: {
-        name: `${name} Plateau Light`,
+        name: `${name} Dune Light`,
         ...metaCommon,
-        url: "https://atelierbram.github.io/syntax-highlighting/atelier-schemes/plateau/",
+        url: "https://atelierbram.github.io/syntax-highlighting/atelier-schemes/dune/",
     },
     colors: {
-        base00: "#f4ecec",
-        base01: "#e7dfdf",
-        base02: "#8a8585",
-        base03: "#7e7777",
-        base04: "#655d5d",
-        base05: "#585050",
-        base06: "#292424",
-        base07: "#1b1818",
-        base08: "#ca4949",
-        base09: "#b45a3c",
-        base0A: "#a06e3b",
-        base0B: "#4b8b8b",
-        base0C: "#5485b6",
-        base0D: "#7272ca",
-        base0E: "#8464c4",
-        base0F: "#bd5187",
+        base00: "#fefbec",
+        base01: "#e8e4cf",
+        base02: "#a6a28c",
+        base03: "#999580",
+        base04: "#7d7a68",
+        base05: "#6e6b5e",
+        base06: "#292824",
+        base07: "#20201d",
+        base08: "#d73737",
+        base09: "#b65611",
+        base0A: "#ae9513",
+        base0B: "#60ac39",
+        base0C: "#1fad83",
+        base0D: "#6684e1",
+        base0E: "#b854d4",
+        base0F: "#d43552",
     },
 }
 

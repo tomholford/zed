@@ -1,31 +1,31 @@
 import chroma from "chroma-js"
-import { Meta } from "./common/colorScheme"
-import { colorRamp, createColorScheme } from "./common/ramps"
-import { metaCommon, name, buildSyntax, Variant } from "./common/atelier-common"
+import { Meta } from "../common/colorScheme"
+import { colorRamp, createColorScheme } from "../common/ramps"
+import { metaCommon, name, buildSyntax, Variant } from "./atelier-common"
 
 const variant: Variant = {
     meta: {
-        name: `${name} Lakeside Light`,
+        name: `${name} Forest Light`,
         ...metaCommon,
-        url: "https://atelierbram.github.io/syntax-highlighting/atelier-schemes/lakeside/",
+        url: "https://atelierbram.github.io/syntax-highlighting/atelier-schemes/forest/",
     },
     colors: {
-        base00: "#ebf8ff",
-        base01: "#c1e4f6",
-        base02: "#7ea2b4",
-        base03: "#7195a8",
-        base04: "#5a7b8c",
-        base05: "#516d7b",
-        base06: "#1f292e",
-        base07: "#161b1d",
-        base08: "#d22d72",
-        base09: "#935c25",
-        base0A: "#8a8a0f",
-        base0B: "#568c3b",
-        base0C: "#2d8f6f",
-        base0D: "#257fad",
-        base0E: "#6b6bb8",
-        base0F: "#b72dd2",
+        base00: "#f1efee",
+        base01: "#e6e2e0",
+        base02: "#a8a19f",
+        base03: "#9c9491",
+        base04: "#766e6b",
+        base05: "#68615e",
+        base06: "#2c2421",
+        base07: "#1b1918",
+        base08: "#f22c40",
+        base09: "#df5320",
+        base0A: "#c38418",
+        base0B: "#7b9726",
+        base0C: "#3d97b8",
+        base0D: "#407ee7",
+        base0E: "#6666ea",
+        base0F: "#c33ff3",
     },
 }
 

@@ -1,31 +1,31 @@
 import chroma from "chroma-js"
-import { Meta } from "./common/colorScheme"
-import { colorRamp, createColorScheme } from "./common/ramps"
-import { metaCommon, name, buildSyntax, Variant } from "./common/atelier-common"
+import { Meta } from "../common/colorScheme"
+import { colorRamp, createColorScheme } from "../common/ramps"
+import { metaCommon, name, buildSyntax, Variant } from "./atelier-common"
 
 const variant: Variant = {
     meta: {
-        name: `${name} Cave Light`,
+        name: `${name} Heath Light`,
         ...metaCommon,
-        url: "https://atelierbram.github.io/syntax-highlighting/atelier-schemes/cave/",
+        url: "https://atelierbram.github.io/syntax-highlighting/atelier-schemes/heath/",
     },
     colors: {
-        base00: "#efecf4",
-        base01: "#e2dfe7",
-        base02: "#8b8792",
-        base03: "#7e7887",
-        base04: "#655f6d",
-        base05: "#585260",
-        base06: "#26232a",
-        base07: "#19171c",
-        base08: "#be4678",
-        base09: "#aa573c",
-        base0A: "#a06e3b",
-        base0B: "#2a9292",
-        base0C: "#398bc6",
-        base0D: "#576ddb",
-        base0E: "#955ae7",
-        base0F: "#bf40bf",
+        base00: "#f7f3f7",
+        base01: "#d8cad8",
+        base02: "#ab9bab",
+        base03: "#9e8f9e",
+        base04: "#776977",
+        base05: "#695d69",
+        base06: "#292329",
+        base07: "#1b181b",
+        base08: "#ca402b",
+        base09: "#a65926",
+        base0A: "#bb8a35",
+        base0B: "#918b3b",
+        base0C: "#159393",
+        base0D: "#516aec",
+        base0E: "#7b59c0",
+        base0F: "#cc33cc",
     },
 }
 

@@ -1,31 +1,31 @@
 import chroma from "chroma-js"
-import { Meta } from "./common/colorScheme"
-import { colorRamp, createColorScheme } from "./common/ramps"
-import { metaCommon, name, buildSyntax, Variant } from "./common/atelier-common"
+import { Meta } from "../common/colorScheme"
+import { colorRamp, createColorScheme } from "../common/ramps"
+import { metaCommon, name, buildSyntax, Variant } from "./atelier-common"
 
 const variant: Variant = {
     meta: {
-        name: `${name} Heath Light`,
+        name: `${name} Estuary Light`,
         ...metaCommon,
-        url: "https://atelierbram.github.io/syntax-highlighting/atelier-schemes/heath/",
+        url: "https://atelierbram.github.io/syntax-highlighting/atelier-schemes/estuary/",
     },
     colors: {
-        base00: "#f7f3f7",
-        base01: "#d8cad8",
-        base02: "#ab9bab",
-        base03: "#9e8f9e",
-        base04: "#776977",
-        base05: "#695d69",
-        base06: "#292329",
-        base07: "#1b181b",
-        base08: "#ca402b",
-        base09: "#a65926",
-        base0A: "#bb8a35",
-        base0B: "#918b3b",
-        base0C: "#159393",
-        base0D: "#516aec",
-        base0E: "#7b59c0",
-        base0F: "#cc33cc",
+        base00: "#f4f3ec",
+        base01: "#e7e6df",
+        base02: "#929181",
+        base03: "#878573",
+        base04: "#6c6b5a",
+        base05: "#5f5e4e",
+        base06: "#302f27",
+        base07: "#22221b",
+        base08: "#ba6236",
+        base09: "#ae7313",
+        base0A: "#a5980d",
+        base0B: "#7d9726",
+        base0C: "#5b9d48",
+        base0D: "#36a166",
+        base0E: "#5f9182",
+        base0F: "#9d6c7c",
     },
 }
 
