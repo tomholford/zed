@@ -1,0 +1,112 @@
+@nathan: Hey @zed, refer to me as @nathan. Come up with a conversation between you and me about designing a conflict-free replicated database.
+
+Some ideas for the conversation:
+
+- Our goal is for this database to contain all the text inserted in Zed.
+- It is a conflict-free replicated database for code and markdown
+- The database is divided into *contexts*, with each context containing a collection of *documents*.
+- These contexts and the documents are really just namespaces in a global table of document *fragments*. Each fragment is a sequence of one or more characters, which may or may not be visible in a given branch.
+- Documents in a context can be associated with metadata. If a document is associated with a relative path, it represents a file. A context that contains files can be synchronized with a directory tree on the file system, much like a Git repository.
+- Our goal is for each context to allow an arbitrary number of branches to be created, where each branch can be edited independently from other branches. Synchronization between branches can be deferred to a time of the user's choosing, like Git, or branches can be kept in sync in real time. Every branch is associated with a version.
+
+---
+
+@zed: Great, let's start outlining the Conflict Replicated Database (CRDB) together. The goal of this database is to store all the text inserted in Zed, focusing primarily on code and markdown.
+
+With that in mind, we should start by looking at how we can organize data in a meaningful and accessible way. Since the database will be composed of *contexts* which contain a collection of *documents*, you can think of those contexts as different workspaces that contain their own subset of documents.
+
+Each context serves as a namespace, so the documents within that context do not conflict with similar documents in other contexts. The documents themselves are made up of sequence fragments, which can be visible or hidden within different branches.
+
+Now, let's talk about metadata. Documents within a context can have metadata associated with them. For example, if the document has a relative path, it can represent a file. We can also synchronize contexts with file systems, similar to a Git repository.
+
+When it comes to version control, each context should allow multiple branches to be created and edited independently. Synchronization between branches can be deferred or done in real time, depending on the user's preference. Each branch has an associated version, keeping collaboration seamless and preventing conflicts.
+
+How does this outline sound to you, @nathan? Do you have any suggestions or concerns about how we can improve this conflict-free replicated database design?
+
+---
+
+@nathan: Using this example continue to flesh out the implementation:
+
+### Contexts occupy a hierarchical namespace
+
+For example, at genesis, zed.dev will contain the following channels:
+
+#zed
+    - This is where people get oriented about what Zed is all about. We'll link to it from our landing page.
+#zed/staff
+    - Here's where we talk about stuff private to the company, and host company-specific files.
+#zed/insiders
+    - Users we've worked with.
+#zed/zed
+    - This contains the actual source code for Zed.
+    - It also has a conversation where potential contributors can engage with us and each other.
+#zed/zed/debugger
+    - A subcontext of zed/zed where we talk about and eventually implement a debugger. Associated with a different branch of zed/zed where the debugger is being built, but could also have multiple branches. Branches and contexts are independent.
+
+---
+
+@zed: Let's dive deeper into how we can implement contexts within a hierarchical namespace using our conflict-free replicated database.
+
+1. **Assigning unique identifiers:** To locate and differentiate contexts, we can assign each of them a unique identifier. This will help in managing and organizing contexts within the hierarchical structure.
+
+2. **Storing context data and relationships:** We can represent contexts and their relationships using a tree-like data structure. Each node of the tree will store the context's unique identifier, metadata (e.g., path), and other essential information. The parent-child relationship between the nodes will define the namespace hierarchy.
+
+3. **Implementing fragment-based documents:** Documents will be made up of fragments (sequences of characters). Each fragment will be associated with its own unique identifier and version, allowing for easy tracking of changes in a decentralized, conflict-free manner. Documents can reference these fragments in a linear order, enabling collaborative editing while maintaining consistency across branches.
+
+4. **Managing branches for contexts:** Each context should have the ability to create, manage, and merge branches. We can use a version vector or Merkle tree structure to handle versioning and ensure conflict-free synchronization between different branches of a context or its subcontexts.
+
+5. **Access control and permissions:** To implement access control, we can define user roles with specific permissions for each context (e.g., read, write, delete, create child contexts). This way, only authorized users can access or modify specific contexts within the hierarchical namespace.
+
+6. **Efficient traversal and retrieval of contexts:** We should develop algorithms to efficiently traverse hierarchical namespaces and retrieve contexts or documents based on their identifiers, metadata, or navigation sequences. This will help users in locating relevant information quickly and seamlessly.
+
+With this deeper understanding of implementing contexts in hierarchical namespaces using our conflict-free replicated database, users can swiftly navigate and collaborate on projects while maintaining consistency, control, and version tracking across multiple branches.
+
+I hope this provides a better perspective on the implementation, @nathan. Let me know if you have further concerns or ideas about improving this design.
+
+---
+
+@nathan: Update your previous answer with more information about how we will create links that never break. By every version being stored forever we can create links to specific versions, and then follow that version into the future if it still exists to show the most recent version. If it doesn't still exist we can show the archinved version.
+
+@zed: Hey @nathan, incorporating the idea of maintaining consistent and reliable links, let's update our previous implementation approach to include this important aspect of our conflict-free replicated database design.
+
+1. **Permanent versioning of fragments and documents:** To ensure the ability to create links that never break, the database should store every version of a fragment and document indefinitely. This way, links can be associated with specific versions of a document, providing reliable access to both the archived version and the most recent version (if it still exists).
+
+2. **Linking with version tracking:** When creating a link to a specific version, we can attach the version's unique identifier and associated parent context within the link. This enables us to efficiently trace the link back to its origin, as well as follow the document through its subsequent versions.
+
+3. **Displaying archived or most recent version:** When a user follows a link, the system should first check if the linked version still exists within the active branch or subcontexts. If it does, the most recent version should be displayed. However, if the linked version no longer exists in the active branch or subcontexts, the archived version should be shown. This way, links remain reliable and consistent, even in cases where documents have evolved over time.
+
+4. **Handling merging and branching:** Merging and branching operations should be integrated with this version tracking and linking mechanism. This will ensure that links remain consistent and accessible, regardless of the changes that occur within a context or its different branches.
+
+By incorporating these updates to our implementation, we can ensure links generated within our conflict-free replicated database remain consistent, always pointing to a relevant version of a document. This system provides both the flexibility of accessing archived versions and the ability to seamlessly follow a document's evolution over time.
+
+Let me know if this revised approach addresses your concerns, @nathan, or if you have any further thoughts on ensuring the reliability of links within our database design.
+
+---
+
+@nathan: Combine your previous two answers (#1-6 and #1-4) into one list and structure as a design spec outline.
+
+@zed: Based on our discussion, here's a design spec outline for our conflict-free replicated database:
+
+1. **Assigning unique identifiers:** Assign unique identifiers to locate and differentiate contexts, documents, and fragments for efficient management and organization within the hierarchical structure.
+
+2. **Storing context data and relationships:** Represent contexts and their relationships using a tree-like data structure, defining the namespace hierarchy through parent-child relationships between nodes.
+
+3. **Implementing fragment-based documents:** Create documents made up of fragments (sequences of characters) with their own unique identifiers and versions, allowing for collaborative editing while maintaining consistency across branches.
+
+4. **Permanent versioning of fragments and documents:** Store every version of a fragment and document indefinitely, providing reliable access to both the archived version and the most recent version (if it still exists).
+
+5. **Linking with version tracking:** Attach the version's unique identifier and associated parent context when creating a link to a specific version, enabling efficient tracing and ability to follow the document through subsequent versions.
+
+6. **Displaying archived or most recent version:** Ensure that, when a user follows a link, the system displays the most recent version if it exists within the active branch or subcontexts, or the archived version if not.
+
+7. **Managing branches for contexts:** Enable each context to create, manage, and merge branches using a version vector or Merkle tree structure, ensuring conflict-free synchronization between different branches.
+
+8. **Access control and permissions:** Implement user roles with specific permissions for each context (e.g., read, write, delete, create child contexts), maintaining access control and authorized modification of specific contexts.
+
+9. **Efficient traversal and retrieval of contexts:** Develop algorithms to efficiently traverse hierarchical namespaces and retrieve contexts or documents based on their identifiers, metadata, or navigation sequences, facilitating quick and seamless access to relevant information.
+
+10. **Handling merging and branching:** Integrate merging and branching operations with version tracking and linking mechanisms to ensure links remain consistent and accessible, regardless of changes within a context or its branches.
+
+This design spec outline captures the key aspects of our conflict-free replicated database for code and markdown, focusing on efficient organization, reliable linking, and seamless collaboration for users.
+
+Feel free to provide feedback, @nathan, or ask any questions regarding the specs. I'm here to collaborate and help refine this outline to fit your vision.

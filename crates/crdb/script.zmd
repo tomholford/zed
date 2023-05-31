@@ -1,0 +1,288 @@
+#zed/zed/crdb
+
+@nathan:
+
+I want to design a conflict-free replicated database (CRDB) to power our vision for talking about code and the Zed way to build products. The goal is for this database to contain all the text inserted in Zed – code, prose/markdown and the team's conversations.
+
+Here are some rough ideas in no particular order
+
+- It is a conflict-free replicated database for code and markdown
+- The database is divided into *contexts*, with each context containing a collection of *documents*.
+- These contexts and the documents are really just namespaces in a global table of document *fragments*. Each fragment is a sequence of one or more characters, which may or may not be visible in a given branch.
+- Documents in a context can be associated with metadata. If a document is associated with a relative path, it represents a file. A context that contains files can be synchronized with a directory tree on the file system, much like a Git repository.
+- Our goal is for each context to allow an arbitrary number of branches to be created, where each branch can be edited independently from other branches. Synchronization between branches can be deferred to a time of the user's choosing, like Git, or branches can be kept in sync in real time. Every branch is associated with a version.
+
+---
+
+@zed:
+
+Great, let's start outlining the Conflict Replicated Database (CRDB) together. The goal of this database is to store all the text inserted in Zed, focusing primarily on code and markdown.
+
+With that in mind, we should start by looking at how we can organize data in a meaningful and accessible way. Since the database will be composed of *contexts* which contain a collection of *documents*, you can think of those contexts as different workspaces that contain their own subset of documents.
+
+Each context serves as a namespace, so the documents within that context do not conflict with similar documents in other contexts. The documents themselves are made up of sequence fragments, which can be visible or hidden within different branches.
+
+Now, let's talk about metadata. Documents within a context can have metadata associated with them. For example, if the document has a relative path, it can represent a file. We can also synchronize contexts with file systems, similar to a Git repository.
+
+When it comes to version control, each context should allow multiple branches to be created and edited independently. Synchronization between branches can be deferred or done in real time, depending on the user's preference. Each branch has an associated version, keeping collaboration seamless and preventing conflicts.
+
+How does this outline sound to you, @nathan? Do you have any suggestions or concerns about how we can improve this conflict-free replicated database design?
+
+---
+
+@nathan:
+
+Using this example continue to flesh out the implementation:
+
+### Contexts occupy a hierarchical namespace
+
+For example, at genesis, zed.dev will contain the following channels:
+
+#zed
+    - This is where people get oriented about what Zed is all about. We'll link to it from our landing page.
+#zed/staff
+    - Here's where we talk about stuff private to the company, and host company-specific files.
+#zed/insiders
+    - Users we've worked with.
+#zed/zed
+    - This contains the actual source code for Zed.
+    - It also has a conversation where potential contributors can engage with us and each other.
+#zed/zed/debugger
+    - A subcontext of zed/zed where we talk about and eventually implement a debugger. Associated with a different branch of zed/zed where the debugger is being built, but could also have multiple branches. Branches and contexts are independent.
+
+---
+
+@zed:
+
+Let's dive deeper into how we can implement contexts within a hierarchical namespace using our conflict-free replicated database.
+
+1. **Assigning unique identifiers:** To locate and differentiate contexts, we can assign each of them a unique identifier. This will help in managing and organizing contexts within the hierarchical structure.
+
+2. **Storing context data and relationships:** We can represent contexts and their relationships using a tree-like data structure. Each node of the tree will store the context's unique identifier, metadata (e.g., path), and other essential information. The parent-child relationship between the nodes will define the namespace hierarchy.
+
+3. **Implementing fragment-based documents:** Documents will be made up of fragments (sequences of characters). Each fragment will be associated with its own unique identifier and version, allowing for easy tracking of changes in a decentralized, conflict-free manner. Documents can reference these fragments in a linear order, enabling collaborative editing while maintaining consistency across branches.
+
+4. **Managing branches for contexts:** Each context should have the ability to create, manage, and merge branches. We can use a version vector or Merkle tree structure to handle versioning and ensure conflict-free synchronization between different branches of a context or its subcontexts.
+
+5. **Access control and permissions:** To implement access control, we can define user roles with specific permissions for each context (e.g., read, write, delete, create child contexts). This way, only authorized users can access or modify specific contexts within the hierarchical namespace.
+
+6. **Efficient traversal and retrieval of contexts:** We should develop algorithms to efficiently traverse hierarchical namespaces and retrieve contexts or documents based on their identifiers, metadata, or navigation sequences. This will help users in locating relevant information quickly and seamlessly.
+
+With this deeper understanding of implementing contexts in hierarchical namespaces using our conflict-free replicated database, users can swiftly navigate and collaborate on projects while maintaining consistency, control, and version tracking across multiple branches.
+
+---
+
+@nathan:
+
+We also want our contexts to have links that never break. By every version being stored forever we can create links to specific versions, and then follow that version into the future if it still exists to show the most recent version. If it doesn't still exist we can show the archived version.
+
+---
+
+@zed:
+
+Incorporating the idea of maintaining consistent and reliable links, let's update our previous implementation approach to include this important aspect of our conflict-free replicated database design.
+
+1. **Permanent versioning of fragments and documents:** To ensure the ability to create links that never break, the database should store every version of a fragment and document indefinitely. This way, links can be associated with specific versions of a document, providing reliable access to both the archived version and the most recent version (if it still exists).
+
+2. **Linking with version tracking:** When creating a link to a specific version, we can attach the version's unique identifier and associated parent context within the link. This enables us to efficiently trace the link back to its origin, as well as follow the document through its subsequent versions.
+
+3. **Displaying archived or most recent version:** When a user follows a link, the system should first check if the linked version still exists within the active branch or subcontexts. If it does, the most recent version should be displayed. However, if the linked version no longer exists in the active branch or subcontexts, the archived version should be shown. This way, links remain reliable and consistent, even in cases where documents have evolved over time.
+
+4. **Handling merging and branching:** Merging and branching operations should be integrated with this version tracking and linking mechanism. This will ensure that links remain consistent and accessible, regardless of the changes that occur within a context or its different branches.
+
+---
+
+@nathan:
+
+Combine the last two outlines into a single spec for the CRDB.
+
+=== EDIT POINT ===
+
+@zed:
+
+Here is a spec for the CRDB with a hierarchical namespace and versioned links that never break.
+
+1. **Assigning unique identifiers:** To locate and differentiate contexts, we can assign each of them a unique identifier. This will help in managing and organizing contexts within the hierarchical structure.
+
+2. **Storing context data and relationships:** We can represent contexts and their relationships using a tree-like data structure. Each node of the tree will store the context's unique identifier, metadata (e.g., path), and other essential information. The parent-child relationship between the nodes will define the namespace hierarchy.
+
+3. **Implementing fragment-based documents:** Documents will be made up of fragments (sequences of characters). Each fragment will be associated with its own unique identifier and version, allowing for easy tracking of changes in a decentralized, conflict-free manner. Documents can reference these fragments in a linear order, enabling collaborative editing while maintaining consistency across branches.
+
+4. **Permanent versioning of fragments and documents:** To ensure the ability to create links that never break, the database should store every version of a fragment and document indefinitely. This way, links can be associated with specific versions of a document, providing reliable access to both the archived version and the most recent version (if it still exists).
+
+4.1. **Linking with version tracking:** When creating a link to a specific version, we can attach the version's unique identifier and associated parent context within the link. This enables us to efficiently trace the link back to its origin, as well as follow the document through its subsequent versions.
+
+4.2. **Displaying archived or most recent version:** When a user follows a link, the system should first check if the linked version still exists within the active branch or subcontexts. If it does, the most recent version should be displayed. However, if the linked version no longer exists in the active branch or subcontexts, the archived version should be shown. This way, links remain reliable and consistent, even in cases where documents have evolved over time.
+
+5. **Managing branches for contexts:** Each context should have the ability to create, manage, and merge branches. We can use a version vector or Merkle tree structure to handle versioning and ensure conflict-free synchronization between different branches of a context or its subcontexts.
+
+5.1. **Handling merging and branching:** Merging and branching operations should be integrated with this version tracking and linking mechanism. This will ensure that links remain consistent and accessible, regardless of the changes that occur within a context or its different branches.
+
+6. **Access control and permissions:** To implement access control, we can define user roles with specific permissions for each context (e.g., read, write, delete, create child contexts). This way, only authorized users can access or modify specific contexts within the hierarchical namespace.
+
+7. **Efficient traversal and retrieval of contexts:** We should develop algorithms to efficiently traverse hierarchical namespaces and retrieve contexts or documents based on their identifiers, metadata, or navigation sequences. This will help users in locating relevant information quickly and seamlessly.
+
+Are there any other details you would like to include in the spec for the CRDB?
+
+---
+
+@nathan:
+
+I think I'm happy with this for now.
+
+First, rewrite this conversation with an intro explaining the CRDB, then outline it's spec.
+Second, let @nate and @antonio know about our plan, I'd like to consult with them on design and implmentation respectively.
+
+@zed:
+
+Sure! just give me a moment.
+
+=== EDIT POINT ===
+
+# CRDB: A conflict-free replicated database for code and markdown
+
+Our goal is for this database to contain all the text inserted in Zed.
+
+## Contexts
+
+The database is divided into *contexts*, with each context containing a collection of *documents*.
+
+### Contexts contain documents
+
+These contexts and the documents are really just namespaces in a global table of document *fragments*. Each fragment is a sequence of one or more characters, which may or may not be visible in a given branch.
+
+#### Documents with paths are files
+
+Documents in a context can be associated with metadata. If a document is associated with a relative path, it represents a file. A context that contains files can be synchronized with a directory tree on the file system, much like a Git repository.
+
+#### Conversations are also documents
+
+Contexts can also be associated with conversations, which are special documents that embed other documents that represent messages. Messages are embedded via a mechanism called *portals*, which will be discussed further below.
+
+### Contexts occupy a hierarchical namespace
+
+For example, at genesis, zed.dev will contain the following channels:
+
+#zed
+    - This is where people get oriented about what Zed is all about. We'll link to it from our landing page.
+#zed/staff
+    - Here's where we talk about stuff private to the company, and host company-specific files.
+#zed/insiders
+    - Users we've worked with.
+#zed/zed
+    - This contains the actual source code for Zed.
+    - It also has a conversation where potential contributors can engage with us and each other.
+#zed/zed/debugger
+    - A subcontext of zed/zed where we talk about and eventually implement a debugger. Associated with a different branch of zed/zed where the debugger is being built, but could also have multiple branches. Branches and contexts are independent.
+
+## Versions
+
+Our goal is for each context to allow an arbitrary number of branches to be created, where each branch can be edited independently from other branches. Synchronization between branches can be deferred to a time of the user's choosing, like Git, or branches can be kept in sync in real time. Every branch is associated with a version.
+
+A version identifies a subset of all operations that have been performed in a context. If we start from an empty context and applied the operations in this subset in any causally valid order, we arrive at the unique state of the context described by the version.
+
+We use versions to query the database. Since we're storing every operation, it isn't feasible to always load every operation in a context into a given replica.
+
+Instead, we can query the database to return a snapshot of how it appears at a specific version. To do that, given the sequence of fragments, we need to efficiently query all fragments within that sequence that are visible at a given version.
+
+* We want to exclude fragments from subsequent and concurrent versions.
+* We want to include fragments introduced before the given version, but only those that are still visible.
+
+We maintain a B-tree index for all fragments.
+
+When querying this B-tree, we only want to descend into subtrees that contain at least one fragment whose insertion causally precedes the target version. But based on our hypothesis that hidden fragments will tend to cluster, we want to avoid descending into nodes for which all the fragments in question are invisible at the current version.
+
+To support descending into nodes that contain operations from a current version, we index the minimal set of concurrent versions that causally precede all fragments in each subtree. Put another way: If a node only contains fragments that were concurrent or subsequent to our target version, we can skip it.
+
+How can we skip nodes that only contain fragments that were hidden before our version?
+
+Here's an idea I'm still thinking through:
+
+For each subtree, we maintain the following version sets in its summary:
+
+I'm wondering if the fragment summary can contain a history of versions at which the first fragment in the sequence appears or the last fragment in the sequence is hidden.
+
+Then, when combining fragments, we combine these summaries, producing a new history in which the first fragment is introduced or all fragments are hidden. Assuming we have this summary, we can use it to determine if a node contains any visible fragments in a given version.
+
+But not quite sure how to produce this summary yet.
+
+For one fragment, every time it becomes hidden or visible we would add an entry to this history. How do we combine two histories?
+           v0          v1          v2          v3
+History A: show first, hide last
+History B:                         show first, hide last
+Combined:  v0: show first, v1: hide last, v2: show first, v3: hide last
+
+---
+
+@zed -> @nate:
+
+Hi @nate! @nathan wanted me to let you know about our plans to create a CRDB. There are some obvious design implications we will need to think about like:
+- Making edits to the conversation transparent
+- How to link to conversations from code and visa-versa
+- How conversations should look, and how linking between conversations works
+- How people will find specific conversations
+
+If it is helpful to get a summary of the current conversation and its version history so far just let me know.
+
+---
+
+@zed:
+
+Welcome @nate, @antonio! @nathan, I've created the following two threads to get the conversations about design and implementation kicked off.
+
+> Designing Contexts, Conversations and CRDBs (#zed/zed/crdb/design)
+> Implementing the CRDB (#zed/zed/crdb/implementation)
+
+I also noticed some initial work was started in `crates/crdb/src` (#zed/zed/crates/crdb/zrc), I'm linking it to this conversation so everyone can see the work that has been done so far.
+
+[crates/crdb/src]
+> clock.rs
+> document_fragment.rs
+> ...
+
+---
+
+@nathan:
+
+@zed that looks great. Can you create the README using that content and add it to the thread?
+
+---
+
+@zed
+
+Sure, working on it...
+
+---
+
+=== EDIT POINT ===
+
+> [README.md] (crates/crdb/src)
+> (README CONTENTS)
+
+---
+
+@zed -> @nate:
+
+Hi @nate! @nathan wanted me to let you know about our plans to create a CRDB. There are some obvious design implications we will need to think about like:
+- Making edits to the conversation transparent
+- How to link to conversations from code and visa-versa
+- How conversations should look, and how linking between conversations works
+- How people will find specific conversations
+
+If it is helpful to get a summary of the current conversation and it's version history so far just let me know.
+
+---
+
+@zed:
+
+Welcome @nate, @antonio! @nathan, I've created the following two threads to get the conversations about design and implementation kicked off.
+
+> Designing Contexts, Conversations and CRDBs (#zed/zed/crdb/design)
+> Implementing the CRDB (#zed/zed/crdb/implementation)
+
+I also noticed some initial work was started in `crates/crdb/src` (#zed/zed/crates/crdb/zrc), I'm linking it to this conversation so everyone can see the work that has been done so far.
+
+[crates/crdb/src]
+> clock.rs
+> document_fragment.rs
+> ...
