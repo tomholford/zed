@@ -105,8 +105,6 @@ export function dropdownDivider(colorScheme: ColorScheme): Container {
 }
 
 export function dropdownGroup(colorScheme: ColorScheme): Flex {
-    const { middle } = colorScheme
-
     return {
         name: "dropdownGroup",
         flex: {
