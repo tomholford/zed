@@ -1,5 +1,5 @@
-import { ColorScheme } from "../../common";
-import { background, border } from "../components";
+import { ColorScheme, Layer } from "../../common";
+import { background, border, foreground, text } from "../components";
 
 // This file is all wishful code, it won't compile right now
 // A bunch of these functions should be sorted to other places
@@ -17,6 +17,31 @@ enum ImageOverlayBorder {
     LightTheme = "#00000026",
     DarkTheme = "#FFFFFF26"
 }
+
+// Use a moule export instead of a namespace when this is moved to a new file
+namespace Font {
+    export enum Family {
+        Sans = "Zed Sans",
+        Mono = "Zed Mono",
+    }
+
+    export enum Size {
+        "3XS" = 8,
+        "2XS" = 10,
+        XS = 12,
+        SM = 14,
+        MD = 16,
+        LG = 18,
+        XL = 20,
+    }
+
+    export enum Weight {
+        Normal = "normal",
+        Bold = "bold",
+    }
+}
+
+
 
 export function loggedInUserButton(colorScheme: ColorScheme): Toggleable<Interactive<ContainedImage>> {
     const { isLight, lowest } = colorScheme
@@ -71,11 +96,11 @@ export function loggedInUserButton(colorScheme: ColorScheme): Toggleable<Interac
 }
 
 // Unsure if this should be ContainedFlex or ContainedStack or ContainedHStack
-export function userMenuDropdown(colorScheme: ColorScheme): ContainedFlex {
+export function userMenuPopover(colorScheme: ColorScheme): ContainedFlex {
     const { middle } = colorScheme
 
     return {
-        name: "userMenuDropdown",
+        name: "userMenuPopover",
         flex: {
             container: {
                 background: background(middle, "base", "default"),
@@ -87,13 +112,34 @@ export function userMenuDropdown(colorScheme: ColorScheme): ContainedFlex {
     }
 }
 
-export function dropdownDivider(colorScheme: ColorScheme): Container {
+export function keyboardShortcut(layer: Layer): ContainedText {
+    return {
+        name: "keyboardShortcut",
+        text: {
+            color: foreground(layer, "variant", "default"),
+            size: Font.Size["2XS"],
+            fontFamily: Font.Family.Sans,
+        }
+    }
+}
+
+export function keyboardShortcutChord(layer: Layer): ContainedFlex {
+    return {
+        name: "keyboardShortcutChord",
+        flex: {
+            spacing: 4,
+            ...keyboardShortcut(layer)
+        }
+    }
+}
+
+export function popoverDivider(colorScheme: ColorScheme): Container {
     const { middle } = colorScheme
 
     const borderStyle = border(middle, "base", "default")
 
     return {
-        name: "dropdownDivider",
+        name: "popoverDivider",
         container: {
             // ? How do we do "width that fills the whole container"
             // width: "100%"
@@ -104,11 +150,38 @@ export function dropdownDivider(colorScheme: ColorScheme): Container {
     }
 }
 
-export function dropdownGroup(colorScheme: ColorScheme): Flex {
+export function popoverGroup(colorScheme: ColorScheme): Flex {
     return {
-        name: "dropdownGroup",
+        name: "popoverGroup",
         flex: {
             spacing: 1
+        }
+    }
+}
+
+export function popoverItem(colorScheme: ColorScheme): Interactive<ContainedFlex> {
+    const { middle } = colorScheme
+
+    return {
+        name: "popoverItem",
+        default: {
+            container: {
+                height: 28,
+                padding: {
+                    top: 6,
+                    bottom: 6,
+                    left: 8,
+                    right: 8
+                }
+            },
+            label: {
+                text: {
+                    family: Font.Family.Sans,
+                    color: foreground(middle, "base", "default"),
+                    size: Font.Size.XS,
+                }
+            },
+            shortcut: keyboardShortcutChord(middle)
         }
     }
 }
