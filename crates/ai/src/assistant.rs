@@ -1064,11 +1064,12 @@ impl AssistantEditor {
                 None
             };
             let language_name = language_name.as_deref().unwrap_or("").to_lowercase();
-
             let selected_text = buffer.text_for_range(range).collect::<String>();
             if selected_text.is_empty() {
                 None
             } else {
+                let file_path = "crates/theme/src";
+                let file_name = "theme.rs";
                 Some(if language_name == "markdown" {
                     selected_text
                         .lines()
@@ -1076,7 +1077,9 @@ impl AssistantEditor {
                         .collect::<Vec<_>>()
                         .join("\n")
                 } else {
-                    format!("```{language_name}\n{selected_text}\n```")
+                    format!(
+                        "```{language_name}\n// {file_path}/{file_name}\n\n{selected_text}\n```"
+                    )
                 })
             }
         });
