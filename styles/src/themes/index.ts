@@ -38,6 +38,7 @@ import { theme as atelierSeasideDark } from "./atelier/atelier-seaside-dark"
 import { theme as atelierSeasideLight } from "./atelier/atelier-seaside-light"
 import { theme as atelierSulphurpoolDark } from "./atelier/atelier-sulphurpool-dark"
 import { theme as atelierSulphurpoolLight } from "./atelier/atelier-sulphurpool-light"
+import { theme as zedOnyx } from "./zed/onyx"
 
 export const themes: ThemeConfig[] = [
     oneDark,
@@ -79,4 +80,5 @@ export const themes: ThemeConfig[] = [
     atelierSeasideLight,
     atelierSulphurpoolDark,
     atelierSulphurpoolLight,
+    zedOnyx
 ]
