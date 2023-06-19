@@ -36,7 +36,7 @@ const ZDSCard = () => {
         <div style={{
             color: `${TOKEN.PRIMARY}`,
             backgroundColor: `${TOKEN.SURFACE}`,
-            border: `1px solid ${TOKEN.SURFACE_BORDER}`,
+            border: `1px solid ${TOKEN.BORDER}`,
             padding: '8px 16px',
             borderRadius: '2px',
             width: '200px',
@@ -50,7 +50,7 @@ const ZDSCardVariant = () => {
         <div style={{
             color: `${TOKEN.PRIMARY}`,
             backgroundColor: `${TOKEN.SURFACE_VARIANT}`,
-            border: `1px solid ${TOKEN.SURFACE_VARIANT_BORDER}`,
+            border: `1px solid ${TOKEN.BORDER}`,
             padding: '8px 16px',
             borderRadius: '2px',
             width: '360px',
