@@ -70,12 +70,12 @@ export type ThemeConfig = {
     [K in keyof ThemeConfigProperties]: ThemeConfigProperties[K]
 }
 
-export enum ThemeAppearance {
+export const enum ThemeAppearance {
     Light = "light",
     Dark = "dark",
 }
 
-export enum ThemeLicenseType {
+export const enum ThemeLicenseType {
     MIT = "MIT",
     Apache2 = "Apache License 2.0",
 }
