@@ -11,7 +11,7 @@ import hover_popover from "./hover_popover"
 
 import { build_syntax } from "../theme/syntax"
 import { interactive, toggleable } from "../element"
-import { useTheme } from "../theme"
+import { useTheme, surfaceStyles } from "../theme"
 
 export default function editor(): any {
     const theme = useTheme()
@@ -52,7 +52,7 @@ export default function editor(): any {
 
     return {
         text_color: syntax.primary.color,
-        background: background(layer),
+        background: surfaceStyles.editor.background,
         active_line_background: with_opacity(background(layer, "on"), 0.75),
         highlighted_line_background: background(layer, "on"),
         // Inline autocomplete suggestions, Co-pilot suggestions, etc.

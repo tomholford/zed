@@ -4,7 +4,7 @@ import * as path from "path"
 import app from "./style_tree/app"
 import { Theme, create_theme } from "./theme/create_theme"
 import { themes } from "./themes"
-import { useThemeStore } from "./theme"
+import { initializeTheme, useThemeStore } from "./theme"
 
 const assets_directory = `${__dirname}/../../assets`
 const temp_directory = fs.mkdtempSync(path.join(tmpdir(), "build-themes"))
@@ -25,8 +25,18 @@ const all_themes: Theme[] = themes.map((theme) =>
     create_theme(theme)
 )
 
+/**
+* Writes the themes to the assets directory
+*
+* First the old generated themes are cleared, then we initialize the theme store, which enables using the theme throughout the app.
+*
+* Then we iterate over the themes, setting the theme in the store, and then generating the style tree for the app for each theme.
+*/
 function write_themes(themes: Theme[], output_directory: string) {
     clear_themes(output_directory)
+
+    initializeTheme(themes[0])
+
     for (const theme of themes) {
         const { setTheme } = useThemeStore.getState()
         setTheme(theme)
