@@ -55,7 +55,7 @@ function build_themes_index(theme: Theme[]): TokenSet[] {
     return themes_index
 }
 
-function write_tokens(themes: Theme[], tokens_directory: string) {
+export function write_tokens(themes: Theme[], tokens_directory: string) {
     clear_tokens(tokens_directory)
 
     for (const theme of themes) {

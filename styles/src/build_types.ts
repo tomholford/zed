@@ -56,7 +56,9 @@ async function main() {
     console.log(`Wrote Typescript types to ${output_path}`)
 }
 
-main().catch((e) => {
-    console.error(e)
-    process.exit(1)
-})
+export async function build_types() {
+    return main().catch((e) => {
+        console.error(e)
+        process.exit(1)
+    })
+}

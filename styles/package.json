@@ -4,7 +4,7 @@
     "description": "Typescript app that builds Zed's themes",
     "main": "./src/build_themes.ts",
     "scripts": {
-        "build": "ts-node ./src/build_themes.ts",
+        "build": "ts-node ./src/app.ts",
         "build-licenses": "ts-node ./src/build_licenses.ts",
         "build-tokens": "ts-node ./src/build_tokens.ts",
         "build-types": "ts-node ./src/build_types.ts",
