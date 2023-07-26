@@ -2326,6 +2326,11 @@ mod tests {
             .fonts()
             .add_fonts(&[
                 Assets
+                    .load("fonts/zed-sans/ibm_plex_sans_regular.otf")
+                    .unwrap()
+                    .to_vec()
+                    .into(),
+                Assets
                     .load("fonts/zed-sans/zed-sans-extended.ttf")
                     .unwrap()
                     .to_vec()
