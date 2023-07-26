@@ -610,6 +610,78 @@ pub struct ContainedLabel {
     pub label: LabelStyle,
 }
 
+#[derive(Clone, Debug, Deserialize, Default, JsonSchema)]
+pub struct TextAndIconStyle {
+    pub text: TextStyle,
+    pub icon: Icon,
+}
+
+pub trait ButtonVariant: Default + JsonSchema + Clone + for<'de> Deserialize<'de> {
+    type Props;
+}
+
+#[derive(Clone, Deserialize, Default, JsonSchema)]
+pub struct IconButtonProps;
+impl ButtonVariant for IconButtonProps {
+    type Props = IconStyle;
+}
+
+#[derive(Clone, Deserialize, Default, JsonSchema)]
+struct TextButtonProps;
+impl ButtonVariant for TextButtonProps {
+    type Props = TextStyle;
+}
+
+#[derive(Clone, Deserialize, Default, JsonSchema)]
+struct ButtonProps;
+impl ButtonVariant for ButtonProps {
+    type Props = TextAndIconStyle;
+}
+
+#[derive(Clone, Deserialize, Default, JsonSchema)]
+pub struct ButtonStyle2<T: ButtonVariant> {
+    pub container: ContainerStyle,
+    #[serde(flatten)]
+    #[serde(bound(deserialize = "T: ButtonVariant"))]
+    pub props: T,
+}
+
+#[derive(Clone, Deserialize, Default, JsonSchema)]
+pub struct Button {
+    #[serde(flatten)]
+    pub states: Interactive<ButtonStyle2<ButtonProps>>,
+}
+
+#[derive(Clone, Deserialize, Default, JsonSchema)]
+pub struct ToggleButton {
+    #[serde(flatten)]
+    pub states: Toggleable<Interactive<ButtonStyle2<ButtonProps>>>,
+}
+
+#[derive(Clone, Deserialize, Default, JsonSchema)]
+pub struct LabelButton {
+    #[serde(flatten)]
+    pub states: Interactive<ButtonStyle2<LabelButtonProps>>,
+}
+
+#[derive(Clone, Deserialize, Default, JsonSchema)]
+pub struct ToggleLabelButton {
+    #[serde(flatten)]
+    pub states: Toggleable<Interactive<ButtonStyle2<LabelButtonProps>>>,
+}
+
+#[derive(Clone, Deserialize, Default, JsonSchema)]
+pub struct IconButton {
+    #[serde(flatten)]
+    pub states: Interactive<ButtonStyle2<IconButtonProps>>,
+}
+
+#[derive(Clone, Deserialize, Default, JsonSchema)]
+pub struct ToggleIconButton {
+    #[serde(flatten)]
+    pub states: Toggleable<Interactive<ButtonStyle2<IconButtonProps>>>,
+}
+
 #[derive(Clone, Deserialize, Default, JsonSchema)]
 pub struct ProjectDiagnostics {
     #[serde(flatten)]
