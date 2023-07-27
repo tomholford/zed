@@ -8,12 +8,14 @@ export const font_families = {
     mono: "Zed Mono",
 }
 
+const UI_BASE_SIZE = 16
+
 export const font_sizes = {
-    "2xs": 10,
-    xs: 12,
-    sm: 14,
-    md: 16,
-    lg: 18,
+    "2xs": UI_BASE_SIZE * 0.625,
+    xs: UI_BASE_SIZE * 0.75,
+    sm: UI_BASE_SIZE * 0.875,
+    md: UI_BASE_SIZE,
+    lg: UI_BASE_SIZE * 1.125,
 }
 
 export type FontWeight = "normal" | "bold"
@@ -21,13 +23,4 @@ export type FontWeight = "normal" | "bold"
 export const font_weights: { [key: string]: FontWeight } = {
     normal: "normal",
     bold: "bold",
-}
-
-export const sizes = {
-    px: 1,
-    xs: 2,
-    sm: 4,
-    md: 6,
-    lg: 8,
-    xl: 12,
 }
