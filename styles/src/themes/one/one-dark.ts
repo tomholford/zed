@@ -1,80 +1,102 @@
-import {
-    chroma,
-    font_weights,
-    color_ramp,
-    ThemeAppearance,
-    ThemeLicenseType,
-    ThemeConfig,
-} from "../../common"
+import { Theme } from "src/types"
 
-const color = {
-    white: "#ACB2BE",
-    grey: "#5D636F",
-    red: "#D07277",
-    dark_red: "#B1574B",
-    orange: "#C0966B",
-    yellow: "#DFC184",
-    green: "#A1C181",
-    teal: "#6FB4C0",
-    blue: "#74ADE9",
-    purple: "#B478CF",
-}
-
-export const theme: ThemeConfig = {
+export const theme: Theme = {
     name: "One Dark",
-    author: "simurai",
-    appearance: ThemeAppearance.Dark,
-    license_type: ThemeLicenseType.MIT,
-    license_url:
-        "https://github.com/atom/atom/tree/master/packages/one-dark-ui",
-    license_file: `${__dirname}/LICENSE`,
-    input_color: {
-        neutral: chroma
-            .scale([
-                "#282c34",
-                "#353b45",
-                "#3e4451",
-                "#545862",
-                "#565c64",
-                "#abb2bf",
-                "#b6bdca",
-                "#c8ccd4",
-            ])
-            .domain([0.05, 0.22, 0.25, 0.45, 0.62, 0.8, 0.9, 1]),
-        red: color_ramp(chroma(color.red)),
-        orange: color_ramp(chroma(color.orange)),
-        yellow: color_ramp(chroma(color.yellow)),
-        green: color_ramp(chroma(color.green)),
-        cyan: color_ramp(chroma(color.teal)),
-        blue: color_ramp(chroma(color.blue)),
-        violet: color_ramp(chroma(color.purple)),
-        magenta: color_ramp(chroma("#be5046")),
+    is_light: false,
+
+    meta: {
+        name: "One Dark",
+        author: "edunfelt",
+        url: "https://rosepinetheme.com/",
+        appearance: "dark",
+        license: `${__dirname}/LICENSE`
     },
-    override: {
-        syntax: {
-            boolean: { color: color.orange },
-            comment: { color: color.grey },
-            enum: { color: color.red },
-            "emphasis.strong": { color: color.orange },
-            function: { color: color.blue },
-            keyword: { color: color.purple },
-            link_text: { color: color.blue, italic: false },
-            link_uri: { color: color.teal },
-            number: { color: color.orange },
-            constant: { color: color.yellow },
-            operator: { color: color.teal },
-            primary: { color: color.white },
-            property: { color: color.red },
-            punctuation: { color: color.white },
-            "punctuation.list_marker": { color: color.red },
-            "punctuation.special": { color: color.dark_red },
-            string: { color: color.green },
-            title: { color: color.red, weight: font_weights.normal },
-            "text.literal": { color: color.green },
-            type: { color: color.teal },
-            "variable.special": { color: color.orange },
-            variant: { color: color.blue },
-            constructor: { color: color.blue },
+    foreground: {
+        default: "#e0def4",
+        muted: "#908caa",
+        disabled: "#6e6a86"
+    },
+    border: {
+        default: {
+            color: "#000000",
+            width: 1,
         },
+        muted: {
+            color: "#666666",
+            width: 1,
+        },
+        disabled: {
+            color: "#999999",
+            width: 1,
+        }
     },
+    container: {
+        background: "#191724",
+        surface: "#26233a",
+        panel: "#1f1d2e",
+        editor: "#191724",
+        wash: "#26233a"
+    },
+    elevation: {
+        menu: {
+            blur: 4,
+            color: "rgba(0, 0, 0, 0.2)",
+            offset: [2, 2]
+        },
+        popover: {
+            blur: 6,
+            color: "rgba(0, 0, 0, 0.2)",
+            offset: [3, 4]
+        },
+        model: {
+            blur: 8,
+            color: "rgba(0, 0, 0, 0.2)",
+            offset: [4, 6]
+        }
+    },
+    shape: {
+        default: 0,
+        rounded: 4,
+        "rounded.full": 9999
+    },
+    state: {
+        hovered: 0.08,
+        pressed: 0.16,
+        active: 0.24,
+        disabled: 0.04
+    },
+    player: {
+        1: {
+            cursor: "#31748f",
+            selection: "rgba(255, 0, 0, 0.2)",
+        },
+        2: {
+            cursor: "#eb6f92",
+            selection: "rgba(0, 255, 0, 0.2)",
+        },
+        3: {
+            cursor: "#f6c177",
+            selection: "rgba(0, 0, 255, 0.2)",
+        },
+        4: {
+            cursor: "#ebbcba",
+            selection: "rgba(255, 255, 0, 0.2)",
+        },
+        5: {
+            cursor: "#9ccfd8",
+            selection: "rgba(0, 255, 255, 0.2)",
+        },
+        6: {
+            cursor: "#c4a7e7",
+            selection: "rgba(255, 0, 255, 0.2)",
+        },
+        7: {
+            cursor: "#ffffff",
+            selection: "rgba(255, 255, 255, 0.2)",
+        },
+        8: {
+            cursor: "#000000",
+            selection: "rgba(0, 0, 0, 0.2)",
+        }
+    }
 }

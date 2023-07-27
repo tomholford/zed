@@ -1,10 +1,10 @@
-import { useTheme } from "../theme"
-import { background } from "./components"
+// import { useTheme } from "../theme"
+// import { background } from "./components"
 
-export default function sharedScreen() {
-    const theme = useTheme()
+// export default function sharedScreen() {
+//     const theme = useTheme()
 
-    return {
-        background: background(theme.highest),
-    }
-}
+//     return {
+//         background: background(theme.highest),
+//     }
+// }

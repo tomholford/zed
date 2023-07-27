@@ -1,0 +1,591 @@
+import chroma from "chroma-js"
+import deepmerge from "deepmerge"
+import { Theme } from "./types"
+
+
+
+
+export function with_opacity(color: string, opacity: number): string {
+    return chroma(color).alpha(opacity).hex()
+}
+
+export function create_theme(theme: ThemeConfig): Theme {
+    const {
+        name,
+        appearance,
+        input_color,
+        override: { syntax },
+    } = theme
+
+    const is_light = appearance === ThemeAppearance.Light
+    const color_ramps: ThemeConfigInputColors = input_color
+
+    // Chromajs scales from 0 to 1 flipped if is_light is true
+    const ramps = get_ramps(is_light, color_ramps)
+    const lowest = lowest_layer(ramps)
+    const middle = middle_layer(ramps)
+    const highest = highest_layer(ramps)
+
+    const popover_shadow = {
+        blur: 4,
+        color: ramps
+            .neutral(is_light ? 7 : 0)
+            .darken()
+            .alpha(0.2)
+            .hex(), // TODO used blend previously. Replace with something else
+        offset: [1, 2],
+    }
+
+    const modal_shadow = {
+        blur: 16,
+        color: ramps
+            .neutral(is_light ? 7 : 0)
+            .darken()
+            .alpha(0.2)
+            .hex(), // TODO used blend previously. Replace with something else
+        offset: [0, 2],
+    }
+
+    const players = {
+        "0": player(ramps.blue),
+        "1": player(ramps.green),
+        "2": player(ramps.magenta),
+        "3": player(ramps.orange),
+        "4": player(ramps.violet),
+        "5": player(ramps.cyan),
+        "6": player(ramps.red),
+        "7": player(ramps.yellow),
+    }
+
+    return {
+        name,
+        is_light,
+
+        ramps,
+
+        lowest,
+        middle,
+        highest,
+
+        popover_shadow,
+        modal_shadow,
+
+        players,
+        syntax,
+    }
+}
+
+function player(ramp: chroma.Scale): Player {
+    return {
+        selection: ramp(0.5).alpha(0.24).hex(),
+        cursor: ramp(0.5).hex(),
+    }
+}
+
+function lowest_layer(ramps: RampSet): Layer {
+    return {
+        base: build_style_set(ramps.neutral, 0.2, 1),
+        variant: build_style_set(ramps.neutral, 0.2, 0.7),
+        on: build_style_set(ramps.neutral, 0.1, 1),
+        accent: build_style_set(ramps.blue, 0.1, 0.5),
+        positive: build_style_set(ramps.green, 0.1, 0.5),
+        warning: build_style_set(ramps.yellow, 0.1, 0.5),
+        negative: build_style_set(ramps.red, 0.1, 0.5),
+    }
+}
+
+function middle_layer(ramps: RampSet): Layer {
+    return {
+        base: build_style_set(ramps.neutral, 0.1, 1),
+        variant: build_style_set(ramps.neutral, 0.1, 0.7),
+        on: build_style_set(ramps.neutral, 0, 1),
+        accent: build_style_set(ramps.blue, 0.1, 0.5),
+        positive: build_style_set(ramps.green, 0.1, 0.5),
+        warning: build_style_set(ramps.yellow, 0.1, 0.5),
+        negative: build_style_set(ramps.red, 0.1, 0.5),
+    }
+}
+
+function highest_layer(ramps: RampSet): Layer {
+    return {
+        base: build_style_set(ramps.neutral, 0, 1),
+        variant: build_style_set(ramps.neutral, 0, 0.7),
+        on: build_style_set(ramps.neutral, 0.1, 1),
+        accent: build_style_set(ramps.blue, 0.1, 0.5),
+        positive: build_style_set(ramps.green, 0.1, 0.5),
+        warning: build_style_set(ramps.yellow, 0.1, 0.5),
+        negative: build_style_set(ramps.red, 0.1, 0.5),
+    }
+}
+
+function build_style_set(
+    ramp: chroma.Scale,
+    background_base: number,
+    foreground_base: number,
+    step = 0.08
+): StyleSet {
+    const style_definitions = build_style_definition(
+        background_base,
+        foreground_base,
+        step
+    )
+
+    function color_string(index_or_color: number | chroma.Color): string {
+        if (typeof index_or_color === "number") {
+            return ramp(index_or_color).hex()
+        } else {
+            return index_or_color.hex()
+        }
+    }
+
+    function build_style(style: Styles): Style {
+        return {
+            background: color_string(style_definitions.background[style]),
+            border: color_string(style_definitions.border[style]),
+            foreground: color_string(style_definitions.foreground[style]),
+        }
+    }
+
+    return {
+        default: build_style("default"),
+        hovered: build_style("hovered"),
+        pressed: build_style("pressed"),
+        active: build_style("active"),
+        disabled: build_style("disabled"),
+        inverted: build_style("inverted"),
+    }
+}
+
+function build_style_definition(bg_base: number, fg_base: number, step = 0.08) {
+    return {
+        background: {
+            default: bg_base,
+            hovered: bg_base + step,
+            pressed: bg_base + step * 1.5,
+            active: bg_base + step * 2.2,
+            disabled: bg_base,
+            inverted: fg_base + step * 6,
+        },
+        border: {
+            default: bg_base + step * 1,
+            hovered: bg_base + step,
+            pressed: bg_base + step,
+            active: bg_base + step * 3,
+            disabled: bg_base + step * 0.5,
+            inverted: bg_base - step * 3,
+        },
+        foreground: {
+            default: fg_base,
+            hovered: fg_base,
+            pressed: fg_base,
+            active: fg_base + step * 6,
+            disabled: bg_base + step * 4,
+            inverted: bg_base + step * 2,
+        },
+    }
+}
+
+export function color_ramp(color: chroma.Color): chroma.Scale {
+    const end_color = color.desaturate(1).brighten(5)
+    const start_color = color.desaturate(1).darken(4)
+    return chroma.scale([start_color, color, end_color]).mode("lab")
+}
+
+/**
+ * Chromajs mutates the underlying ramp when you call domain. This causes problems because
+    we now store the ramps object in the theme so that we can pull colors out of them.
+    So instead of calling domain and storing the result, we have to construct new ramps for each
+    theme so that we don't modify the passed in ramps.
+    This combined with an error in the type definitions for chroma js means we have to cast the colors
+    function to any in order to get the colors back out from the original ramps.
+ * @param is_light
+ * @param color_ramps
+ * @returns
+ */
+export function get_ramps(
+    is_light: boolean,
+    color_ramps: ThemeConfigInputColors
+): RampSet {
+    const ramps: RampSet = {} as any // eslint-disable-line @typescript-eslint/no-explicit-any
+    const color_keys = Object.keys(color_ramps) as ThemeConfigInputColorsKeys[]
+
+    if (is_light) {
+        for (const ramp_name of color_keys) {
+            ramps[ramp_name] = chroma.scale(
+                color_ramps[ramp_name].colors(100).reverse()
+            )
+        }
+        ramps.neutral = chroma.scale(color_ramps.neutral.colors(100).reverse())
+    } else {
+        for (const ramp_name of color_keys) {
+            ramps[ramp_name] = chroma.scale(color_ramps[ramp_name].colors(100))
+        }
+        ramps.neutral = chroma.scale(color_ramps.neutral.colors(100))
+    }
+
+    return ramps
+}
+
+export interface SyntaxHighlightStyle {
+    color?: string
+    weight?: FontWeight
+    underline?: boolean
+    italic?: boolean
+}
+
+type SyntaxKeys =
+    | 'comment'
+    | 'comment.doc'
+    | 'primary'
+    | 'predictive'
+    | 'hint'
+    | 'emphasis'
+    | 'title'
+    | 'link_uri'
+    | 'link_text'
+    | 'punctuation'
+    | 'string'
+    | 'variant'
+    | 'type'
+    | 'variable'
+    | 'label'
+    | 'tag'
+    | 'attribute'
+    | 'property'
+    | 'constant'
+    | 'keyword'
+    | 'enum'
+    | 'operator'
+    | 'number'
+    | 'boolean'
+    | 'function'
+    | 'preproc'
+    | 'embedded'
+    | 'emphasis.strong'
+    | 'text.literal'
+    | 'punctuation.bracket'
+    | 'punctuation.delimiter'
+    | 'punctuation.special'
+    | 'punctuation.list_marker'
+    | 'string.special'
+    | 'string.special.symbol'
+    | 'string.escape'
+    | 'string.regex'
+    | 'type.builtin'
+    | 'variable.special'
+    | 'constant.builtin'
+    | 'function.builtin'
+    | 'function.definition'
+    | 'function.special.definition'
+    | 'function.method'
+    | 'function.method.builtin';
+
+export type Syntax = Record<SyntaxKeys, SyntaxHighlightStyle> & {
+    // We allow Function here because all JS objects literals have this property
+    constructor: SyntaxHighlightStyle | Function // eslint-disable-line  @typescript-eslint/ban-types
+}
+
+export type ThemeSyntax = Partial<Syntax>
+
+const default_syntax_highlight_style: Omit<SyntaxHighlightStyle, "color"> = {
+    weight: "normal",
+    underline: false,
+    italic: false,
+}
+
+function build_default_syntax(): Syntax {
+    const theme = useTheme()
+    const syntax: {
+        [key: string]: Omit<SyntaxHighlightStyle, "color">
+    } = {}
+    for (const key of Object.keys({} as Syntax)) {
+        syntax[key as keyof Syntax] = {
+            ...default_syntax_highlight_style,
+        }
+    }
+    const predictive = chroma
+        .mix(
+            theme.ramps.neutral(0.4).hex(),
+            theme.ramps.blue(0.4).hex(),
+            0.45,
+            "lch"
+        )
+        .hex()
+    const hint = chroma
+        .mix(
+            theme.ramps.neutral(0.6).hex(),
+            theme.ramps.blue(0.4).hex(),
+            0.45,
+            "lch"
+        )
+        .hex()
+
+    const color = {
+        primary: theme.ramps.neutral(1).hex(),
+        comment: theme.ramps.neutral(0.71).hex(),
+        punctuation: theme.ramps.neutral(0.86).hex(),
+        predictive: predictive,
+        hint: hint,
+        emphasis: theme.ramps.blue(0.5).hex(),
+        string: theme.ramps.orange(0.5).hex(),
+        function: theme.ramps.yellow(0.5).hex(),
+        type: theme.ramps.cyan(0.5).hex(),
+        constructor: theme.ramps.blue(0.5).hex(),
+        variant: theme.ramps.blue(0.5).hex(),
+        property: theme.ramps.blue(0.5).hex(),
+        enum: theme.ramps.orange(0.5).hex(),
+        operator: theme.ramps.orange(0.5).hex(),
+        number: theme.ramps.green(0.5).hex(),
+        boolean: theme.ramps.green(0.5).hex(),
+        constant: theme.ramps.green(0.5).hex(),
+        keyword: theme.ramps.blue(0.5).hex(),
+    }
+
+    const default_syntax: Syntax = {
+        ...syntax,
+        comment: {
+            color: color.comment,
+        },
+        "comment.doc": {
+            color: color.comment,
+        },
+        primary: {
+            color: color.primary,
+        },
+        predictive: {
+            color: color.predictive,
+            italic: true,
+        },
+        hint: {
+            color: color.hint,
+            weight: font_weights.bold,
+        },
+        emphasis: {
+            color: color.emphasis,
+        },
+        "emphasis.strong": {
+            color: color.emphasis,
+            weight: font_weights.bold,
+        },
+        title: {
+            color: color.primary,
+            weight: font_weights.bold,
+        },
+        link_uri: {
+            color: theme.ramps.green(0.5).hex(),
+            underline: true,
+        },
+        link_text: {
+            color: theme.ramps.orange(0.5).hex(),
+            italic: true,
+        },
+        "text.literal": {
+            color: color.string,
+        },
+        punctuation: {
+            color: color.punctuation,
+        },
+        "punctuation.bracket": {
+            color: color.punctuation,
+        },
+        "punctuation.delimiter": {
+            color: color.punctuation,
+        },
+        "punctuation.special": {
+            color: theme.ramps.neutral(0.86).hex(),
+        },
+        "punctuation.list_marker": {
+            color: color.punctuation,
+        },
+        string: {
+            color: color.string,
+        },
+        "string.special": {
+            color: color.string,
+        },
+        "string.special.symbol": {
+            color: color.string,
+        },
+        "string.escape": {
+            color: color.comment,
+        },
+        "string.regex": {
+            color: color.string,
+        },
+        constructor: {
+            color: theme.ramps.blue(0.5).hex(),
+        },
+        variant: {
+            color: theme.ramps.blue(0.5).hex(),
+        },
+        type: {
+            color: color.type,
+        },
+        variable: {
+            color: color.primary,
+        },
+        label: {
+            color: theme.ramps.blue(0.5).hex(),
+        },
+        tag: {
+            color: theme.ramps.blue(0.5).hex(),
+        },
+        attribute: {
+            color: theme.ramps.blue(0.5).hex(),
+        },
+        property: {
+            color: theme.ramps.blue(0.5).hex(),
+        },
+        constant: {
+            color: color.constant,
+        },
+        keyword: {
+            color: color.keyword,
+        },
+        enum: {
+            color: color.enum,
+        },
+        operator: {
+            color: color.operator,
+        },
+        number: {
+            color: color.number,
+        },
+        boolean: {
+            color: color.boolean,
+        },
+        function: {
+            color: color.function,
+        },
+        preproc: {
+            color: color.primary,
+        },
+        embedded: {
+            color: color.primary,
+        },
+    }
+
+    return default_syntax
+}
+
+export function build_syntax(): Syntax {
+    const theme = useTheme()
+
+    const default_syntax: Syntax = build_default_syntax()
+
+    if (!theme.syntax) {
+        return default_syntax
+    }
+
+    const syntax = deepmerge<Syntax, Partial<ThemeSyntax>>(
+        default_syntax,
+        theme.syntax,
+        {
+            arrayMerge: (destinationArray, sourceArray) => [
+                ...destinationArray,
+                ...sourceArray,
+            ],
+        }
+    )
+
+    return syntax
+}
+
+interface ThemeMeta {
+    /** The name of the theme */
+    name: string
+    /** The theme's appearance. Either `light` or `dark`. */
+    appearance: ThemeAppearance
+    /** The author of the theme
+     *
+     * Ideally formatted as `Full Name <email>`
+     *
+     * Example: `John Doe <john@doe.com>`
+     */
+    author: string
+    /** SPDX License string
+     *
+     * Example: `MIT`
+     */
+    license_type?: string | ThemeLicenseType
+    license_url?: string
+    license_file: string
+    theme_url?: string
+}
+
+export type ThemeFamilyMeta = Pick<
+    ThemeMeta,
+    "name" | "author" | "license_type" | "license_url"
+>
+
+export interface ThemeConfigInputColors {
+    neutral: chroma.Scale<chroma.Color>
+    red: chroma.Scale<chroma.Color>
+    orange: chroma.Scale<chroma.Color>
+    yellow: chroma.Scale<chroma.Color>
+    green: chroma.Scale<chroma.Color>
+    cyan: chroma.Scale<chroma.Color>
+    blue: chroma.Scale<chroma.Color>
+    violet: chroma.Scale<chroma.Color>
+    magenta: chroma.Scale<chroma.Color>
+}
+
+export type ThemeConfigInputColorsKeys = keyof ThemeConfigInputColors
+export type ThemeConfigInputSyntax = Partial<Syntax>
+
+interface ThemeConfigOverrides {
+    syntax: ThemeConfigInputSyntax
+}
+
+type ThemeConfigProperties = ThemeMeta & {
+    input_color: ThemeConfigInputColors
+    override: ThemeConfigOverrides
+}
+
+export type ThemeConfig = {
+    [K in keyof ThemeConfigProperties]: ThemeConfigProperties[K]
+}
+
+export enum ThemeAppearance {
+    Light = "light",
+    Dark = "dark",
+}
+
+export enum ThemeLicenseType {
+    MIT = "MIT",
+    Apache2 = "Apache License 2.0",
+}
+
+export const font_families = {
+    ui_sans: "IBM Plex Sans",
+    sans: "Zed Sans",
+    mono: "Zed Mono",
+}
+
+const UI_BASE_SIZE = 16
+
+export const font_sizes = {
+    "2xs": UI_BASE_SIZE * 0.625,
+    xs: UI_BASE_SIZE * 0.75,
+    sm: UI_BASE_SIZE * 0.875,
+    md: UI_BASE_SIZE,
+    lg: UI_BASE_SIZE * 1.125,
+}
+
+export type FontWeight = "normal" | "bold"
+
+export const font_weights: { [key: string]: FontWeight } = {
+    normal: "normal",
+    bold: "bold",
+}
+
+export function slugify(t: string): string {
+    return t
+        .toString()
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^\w-]+/g, "")
+        .replace(/--+/g, "-")
+        .replace(/^-+/, "")
+        .replace(/-+$/, "")
+}

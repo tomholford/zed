@@ -27,6 +27,7 @@ module.exports = {
         "import/extensions": [".ts"],
     },
     rules: {
+        "@typescript-eslint/no-namespace": "off",
         "linebreak-style": ["error", "unix"],
         semi: ["error", "never"],
     },
