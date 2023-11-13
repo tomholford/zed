@@ -95,7 +95,7 @@ pub use sum_tree::Bias;
 use sum_tree::TreeMap;
 use text::{OffsetUtf16, Rope};
 use theme::{
-    ActiveTheme, DiagnosticStyle, PlayerColor, SyntaxTheme, Theme, ThemeColors, ThemeSettings,
+    ActiveTheme, PlayerColor, StatusColors, SyntaxTheme, Theme, ThemeColors, ThemeSettings,
 };
 use ui::{IconButton, StyledExt, UITextSize};
 use util::{post_inc, RangeExt, ResultExt, TryFutureExt};
@@ -590,7 +590,7 @@ pub struct EditorStyle {
     pub text: TextStyle,
     pub scrollbar_width: Pixels,
     pub syntax: Arc<SyntaxTheme>,
-    pub diagnostic_style: DiagnosticStyle,
+    pub diagnostic_style: StatusColors,
 }
 
 type CompletionId = usize;
@@ -9417,7 +9417,7 @@ impl Render for Editor {
             text: text_style,
             scrollbar_width: px(12.),
             syntax: cx.theme().syntax().clone(),
-            diagnostic_style: cx.theme().diagnostic_style(),
+            diagnostic_style: cx.theme().status().clone(),
         })
     }
 }
@@ -10038,21 +10038,17 @@ pub fn highlight_diagnostic_message(
     (message_without_backticks, highlights)
 }
 
-pub fn diagnostic_style(
-    severity: DiagnosticSeverity,
-    valid: bool,
-    style: &DiagnosticStyle,
-) -> Hsla {
+pub fn diagnostic_style(severity: DiagnosticSeverity, valid: bool, status: &StatusColors) -> Hsla {
     match (severity, valid) {
-        (DiagnosticSeverity::ERROR, true) => style.error,
-        (DiagnosticSeverity::ERROR, false) => style.error,
-        (DiagnosticSeverity::WARNING, true) => style.warning,
-        (DiagnosticSeverity::WARNING, false) => style.warning,
-        (DiagnosticSeverity::INFORMATION, true) => style.info,
-        (DiagnosticSeverity::INFORMATION, false) => style.info,
-        (DiagnosticSeverity::HINT, true) => style.info,
-        (DiagnosticSeverity::HINT, false) => style.info,
-        _ => style.ignored,
+        (DiagnosticSeverity::ERROR, true) => status.error,
+        (DiagnosticSeverity::ERROR, false) => status.error,
+        (DiagnosticSeverity::WARNING, true) => status.warning,
+        (DiagnosticSeverity::WARNING, false) => status.warning,
+        (DiagnosticSeverity::INFORMATION, true) => status.info,
+        (DiagnosticSeverity::INFORMATION, false) => status.info,
+        (DiagnosticSeverity::HINT, true) => status.info,
+        (DiagnosticSeverity::HINT, false) => status.info,
+        _ => status.ignored,
     }
 }
 
