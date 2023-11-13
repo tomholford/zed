@@ -97,7 +97,7 @@ use text::{OffsetUtf16, Rope};
 use theme::{
     ActiveTheme, DiagnosticStyle, PlayerColor, SyntaxTheme, Theme, ThemeColors, ThemeSettings,
 };
-use ui::{IconButton, StyledExt};
+use ui::{IconButton, StyledExt, UITextSize};
 use util::{post_inc, RangeExt, ResultExt, TryFutureExt};
 use workspace::{
     item::ItemEvent, searchable::SearchEvent, ItemNavHistory, SplitDirection, ViewId, Workspace,
@@ -9383,7 +9383,7 @@ impl Render for Editor {
                     color: cx.theme().colors().text,
                     font_family: "Zed Sans".into(), // todo!()
                     font_features: FontFeatures::default(),
-                    font_size: rems(1.0).into(),
+                    font_size: UITextSize::default().rems().into(),
                     font_weight: FontWeight::NORMAL,
                     font_style: FontStyle::Normal,
                     line_height: relative(1.3).into(), // TODO relative(settings.buffer_line_height.value()),
