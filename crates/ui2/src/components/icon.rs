@@ -230,43 +230,51 @@ impl Icon {
         }
     }
 
-    pub fn from_file_ext(str: Arc<str>) -> Self {
+    pub fn from_file_ext(str: &str) -> Option<Self> {
         match str.as_ref() {
-            "rs" => Icon::FileRust,
-            "py" => Icon::FilePython,
-            "html" | "htm" => Icon::FileHtml,
-            // Will be FileCss/FileSass/FileLess
-            "css" | "scss" | "less" => Icon::FileGeneric,
-            // Will be FileJavascript
-            "js" | "jsx" | "mjs" => Icon::FileCode,
-            "ts" | "tsx" => Icon::FileTypescript,
-            // Will be FileJava
-            "java" | "class" | "jar" => Icon::FileCode,
-            // Will be FileC/FileCpp/FileH/FileHpp
-            "c" | "cpp" | "h" | "hpp" => Icon::FileCode,
-            "toml" => Icon::FileToml,
-            // Will be FileGo
-            "go" => Icon::FileCode,
-            // Will be FileRuby
-            "rb" => Icon::FileCode,
-            "cs" => Icon::FileCode,
-            "ex" | "exs" => Icon::FileElixir,
-            "php" => Icon::FileCode,
-            "pl" | "pm" => Icon::FileCode,
-            "lua" => Icon::FileCode,
-            "r" => Icon::FileCode,
-            "sh" | "bash" | "bat" | "ps1" => Icon::FileTerminal,
-            "zip" | "rar" | "7z" | "tar" | "gzip" | "bzip2" | "xz" => Icon::FileArchive,
-            "mp3" | "wav" | "flac" | "aac" | "ogg" | "m4a" => Icon::FileAudio,
-            "jpg" | "jpeg" | "png" | "gif" | "bmp" | "ico" | "svg" => Icon::FileImage,
-            "mp4" | "mkv" | "flv" | "avi" | "mov" | "wmv" => Icon::FileVideo,
-            "sql" | "db" | "mdb" => Icon::FileDatabase,
-            "doc" | "docx" | "pdf" | "txt" | "rtf" | "odt" => Icon::FileDoc,
-            "xml" | "json" | "yml" | "yaml" | "ini" | "cfg" | "conf" => Icon::FileSettings,
-            "md" | "markdown" | "rst" => Icon::FileDoc,
-            "lock" | "key" | "pem" | "cert" => Icon::FileLock,
-            "git" | "gitignore" => Icon::FileGit,
-            _ => Icon::File,
+            "rs" => Some(Icon::FileRust),
+            "py" => Some(Icon::FilePython),
+            "html" | "htm" => Some(Icon::FileHtml),
+            "css" | "scss" | "less" => Some(Icon::FileGeneric),
+            "js" | "jsx" | "mjs" | "java" | "class" | "jar" | "c" | "cpp" | "h" | "hpp" | "go"
+            | "rb" | "cs" | "php" | "pl" | "pm" | "lua" | "r" => Some(Icon::FileCode),
+            "ts" | "tsx" => Some(Icon::FileTypescript),
+            "toml" => Some(Icon::FileToml),
+            "eex" | "exs" | "heex" => Some(Icon::FileElixir),
+            "eslintrc" | "eslintrc.js" | "eslintrc.json" => Some(Icon::FileEslint),
+            "sh" | "bash" | "bat" | "ps1" | "zlogin" | "zsh" | "zsh_aliases" | "zsh_histfile"
+            | "zsh_profile" | "zshenv" | "zshrc" => Some(Icon::FileTerminal),
+            "zip" | "rar" | "7z" | "tar" | "gzip" | "bzip2" | "xz" => Some(Icon::FileArchive),
+            "mp3" | "wav" | "flac" | "aac" | "ogg" | "m4a" => Some(Icon::FileAudio),
+            "prettierignore" | "prettierrc" => Some(Icon::FilePrettier),
+            "psd" | "tiff" | "webm" | "jpg" | "jpeg" | "png" | "gif" | "bmp" | "ico" | "svg" => {
+                Some(Icon::FileImage)
+            }
+            "mp4" | "mkv" | "flv" | "avi" | "mov" | "wmv" => Some(Icon::FileVideo),
+            "sql" | "db" | "mdb" | "accdb" | "csv" | "dbf" | "fmp" | "fp7" | "gdb" | "ib"
+            | "ldf" | "mdf" | "myd" | "myi" | "pdb" | "sav" | "sdf" | "sqlite" => {
+                Some(Icon::FileDatabase)
+            }
+            "doc" | "pdf" | "txt" | "rtf" | "odt" | "docx" | "md" | "mdx" | "odp" | "ods"
+            | "ppt" | "pptx" | "xls" | "xlsx" => Some(Icon::FileDoc),
+            "xml" | "json" | "yml" | "yaml" | "ini" | "cfg" | "conf" => Some(Icon::FileSettings),
+            "markdown" | "rst" => Some(Icon::FileDoc),
+            "lock" | "key" | "pem" | "cert" => Some(Icon::FileLock),
+            "git" | "gitignore" => Some(Icon::FileGit),
+            _ => None,
+        }
+    }
+
+    pub fn from_path(path: Arc<str>) -> Self {
+        let segments: Vec<&str> = path.rsplitn(2, '/').next().unwrap().split('.').collect();
+        if let Some(icon) = segments
+            .iter()
+            .rev()
+            .find_map(|s| Self::from_file_ext(s.to_owned()))
+        {
+            return icon;
+        } else {
+            return Icon::FileGeneric;
         }
     }
 }
