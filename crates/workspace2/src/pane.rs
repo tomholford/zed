@@ -7,9 +7,9 @@ use crate::{
 use anyhow::Result;
 use collections::{HashMap, HashSet, VecDeque};
 use gpui::{
-    actions, prelude::*, register_action, AppContext, AsyncWindowContext, Component, Div, EntityId,
-    EventEmitter, FocusHandle, Model, PromptLevel, Render, Task, View, ViewContext, VisualContext,
-    WeakView, WindowContext,
+    actions, hsla, prelude::*, register_action, svg, AppContext, AsyncWindowContext, Component,
+    Div, EntityId, EventEmitter, FocusHandle, Model, PromptLevel, Render, Task, View, ViewContext,
+    VisualContext, WeakView, WindowContext,
 };
 use parking_lot::Mutex;
 use project2::{Project, ProjectEntryId, ProjectPath};
@@ -24,8 +24,7 @@ use std::{
         Arc,
     },
 };
-use ui::v_stack;
-use ui::{prelude::*, Icon, IconButton, IconElement, TextColor, TextTooltip};
+use ui::{prelude::*, v_stack, Icon, IconButton, IconElement, TextColor, TextTooltip};
 use util::truncate_and_remove_front;
 
 #[derive(PartialEq, Clone, Copy, Deserialize, Debug)]
@@ -1928,8 +1927,17 @@ impl Render for Pane {
             .child(if let Some(item) = self.active_item() {
                 div().flex_1().child(item.to_any())
             } else {
-                // todo!()
-                div().child("Empty Pane")
+                div().size_full().relative().child(
+                    svg()
+                        .absolute()
+                        .neg_ml_12()
+                        .neg_mt_12()
+                        .top_1_2()
+                        .left_1_2()
+                        .size_24()
+                        .path("icons/zed-large.svg")
+                        .text_color(hsla(0., 0., 0., 0.08)),
+                )
             })
 
         // enum MouseNavigationHandler {}

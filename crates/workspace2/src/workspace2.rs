@@ -3742,6 +3742,8 @@ impl Render for Workspace {
                                     .flex()
                                     .flex_none()
                                     .overflow_hidden()
+                                    .border_r()
+                                    .border_color(cx.theme().colors().border)
                                     .child(self.left_dock.clone()),
                             )
                             // Panes
@@ -3767,6 +3769,8 @@ impl Render for Workspace {
                                     .flex()
                                     .flex_none()
                                     .overflow_hidden()
+                                    .border_l()
+                                    .border_color(cx.theme().colors().border)
                                     .child(self.right_dock.clone()),
                             ),
                     ),
