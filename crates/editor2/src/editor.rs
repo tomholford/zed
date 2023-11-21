@@ -97,7 +97,7 @@ use text::{OffsetUtf16, Rope};
 use theme::{
     ActiveTheme, DiagnosticStyle, PlayerColor, SyntaxTheme, Theme, ThemeColors, ThemeSettings,
 };
-use ui::{v_stack, HighlightedLabel, IconButton, StyledExt, Tooltip};
+use ui::{v_stack, HighlightedLabel, IconButton, Label, Popover, StyledExt, Tooltip};
 use util::{post_inc, RangeExt, ResultExt, TryFutureExt};
 use workspace::{
     item::{ItemEvent, ItemHandle},
@@ -1545,63 +1545,78 @@ impl CodeActionsMenu {
         let actions = self.actions.clone();
         let selected_item = self.selected_item;
 
-        let element = uniform_list(
-            cx.view().clone(),
-            "code_actions_menu",
-            self.actions.len(),
-            move |this, range, cx| {
-                actions[range.clone()]
+        // let element =
+        // .elevation_1(cx)
+        // .px_2()
+        // .py_1()
+
+        let element = Popover::new()
+            .aside(
+                // TODO: This should be a component and be the same as hoverdocs
+                v_stack()
+                    .elevation_2(cx)
+                    .p_1()
+                    .max_w(rems(34.))
+                    .max_h(rems(42.))
+                    .child(
+                        // TODO: Active item Doc markdown goes here
+                        Label::new("This is an example item doc!"),
+                    ),
+            )
+            .children(vec![uniform_list(
+                cx.view().clone(),
+                "code_actions_menu",
+                self.actions.len(),
+                move |this, range, cx| {
+                    actions[range.clone()]
+                        .iter()
+                        .enumerate()
+                        .map(|(ix, action)| {
+                            let item_ix = range.start + ix;
+                            let selected = selected_item == item_ix;
+                            let colors = cx.theme().colors();
+                            div()
+                                .px_2()
+                                .text_ui()
+                                .text_color(colors.text)
+                                .when(selected, |style| {
+                                    style
+                                        .bg(colors.element_active)
+                                        .text_color(colors.text_accent)
+                                })
+                                .hover(|style| {
+                                    style
+                                        .bg(colors.element_hover)
+                                        .text_color(colors.text_accent)
+                                })
+                                .on_mouse_down(
+                                    MouseButton::Left,
+                                    cx.listener(move |editor, _, cx| {
+                                        cx.stop_propagation();
+                                        editor
+                                            .confirm_code_action(
+                                                &ConfirmCodeAction {
+                                                    item_ix: Some(item_ix),
+                                                },
+                                                cx,
+                                            )
+                                            .map(|task| task.detach_and_log_err(cx));
+                                    }),
+                                )
+                                // TASK: It would be good to make lsp_action.title a SharedString to avoid allocating here.
+                                .child(SharedString::from(action.lsp_action.title.clone()))
+                        })
+                        .collect()
+                },
+            )
+            .with_width_from_item(
+                self.actions
                     .iter()
                     .enumerate()
-                    .map(|(ix, action)| {
-                        let item_ix = range.start + ix;
-                        let selected = selected_item == item_ix;
-                        let colors = cx.theme().colors();
-                        div()
-                            .px_2()
-                            .text_ui()
-                            .text_color(colors.text)
-                            .when(selected, |style| {
-                                style
-                                    .bg(colors.element_active)
-                                    .text_color(colors.text_accent)
-                            })
-                            .hover(|style| {
-                                style
-                                    .bg(colors.element_hover)
-                                    .text_color(colors.text_accent)
-                            })
-                            .on_mouse_down(
-                                MouseButton::Left,
-                                cx.listener(move |editor, _, cx| {
-                                    cx.stop_propagation();
-                                    editor
-                                        .confirm_code_action(
-                                            &ConfirmCodeAction {
-                                                item_ix: Some(item_ix),
-                                            },
-                                            cx,
-                                        )
-                                        .map(|task| task.detach_and_log_err(cx));
-                                }),
-                            )
-                            // TASK: It would be good to make lsp_action.title a SharedString to avoid allocating here.
-                            .child(SharedString::from(action.lsp_action.title.clone()))
-                    })
-                    .collect()
-            },
-        )
-        .elevation_1(cx)
-        .px_2()
-        .py_1()
-        .with_width_from_item(
-            self.actions
-                .iter()
-                .enumerate()
-                .max_by_key(|(_, action)| action.lsp_action.title.chars().count())
-                .map(|(ix, _)| ix),
-        )
-        .render_into_any();
+                    .max_by_key(|(_, action)| action.lsp_action.title.chars().count())
+                    .map(|(ix, _)| ix),
+            )])
+            .render_into_any();
 
         if self.deployed_from_indicator {
             *cursor_position.column_mut() = 0;

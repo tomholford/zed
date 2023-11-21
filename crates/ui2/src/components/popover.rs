@@ -1,5 +1,5 @@
 use gpui::{
-    AnyElement, Component, Div, Element, ElementId, ParentElement, RenderOnce, Styled,
+    AnyElement, Component, Div, Element, ElementId, ParentElement, Rems, RenderOnce, Styled,
     WindowContext,
 };
 use smallvec::SmallVec;
@@ -37,6 +37,7 @@ use crate::{v_stack, StyledExt};
 pub struct Popover {
     children: SmallVec<[AnyElement; 2]>,
     aside: Option<AnyElement>,
+    max_height: Option<Rems>,
 }
 
 impl Component for Popover {
@@ -47,6 +48,9 @@ impl Component for Popover {
             .relative()
             .elevation_2(cx)
             .p_1()
+            .when_some(self.max_height, |this, max_height| {
+                this.max_h(max_height).overflow_hidden_y()
+            })
             .children(self.children)
             .when_some(self.aside, |this, aside| {
                 // TODO: This will statically position the aside to the top right of the popover.
@@ -70,7 +74,13 @@ impl Popover {
         Self {
             children: SmallVec::new(),
             aside: None,
+            max_height: None,
         }
+    }
+
+    pub fn max_height(mut self, rems: Rems) -> Self {
+        self.max_height = Some(rems);
+        self
     }
 
     pub fn aside(mut self, aside: impl RenderOnce) -> Self
