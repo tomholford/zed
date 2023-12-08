@@ -313,6 +313,44 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a4668cab20f66d8d020e1fbc0ebe47217433c1b6c8f2040faf858554e394ace6"
 
 [[package]]
+name = "appearance"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "client2",
+ "db2",
+ "editor2",
+ "futures 0.3.28",
+ "gpui2",
+ "human_bytes",
+ "isahc",
+ "itertools 0.11.0",
+ "language2",
+ "lazy_static",
+ "log",
+ "menu2",
+ "postage",
+ "project2",
+ "rand 0.8.5",
+ "regex",
+ "search2",
+ "serde",
+ "serde_derive",
+ "settings2",
+ "smallvec",
+ "story",
+ "strum",
+ "sysinfo",
+ "theme2",
+ "tree-sitter-markdown",
+ "ui2",
+ "urlencoding",
+ "util",
+ "workspace2",
+]
+
+[[package]]
 name = "arrayref"
 version = "0.3.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -11951,6 +11989,7 @@ dependencies = [
  "activity_indicator2",
  "ai2",
  "anyhow",
+ "appearance",
  "assistant2",
  "async-compression",
  "async-recursion 0.3.2",

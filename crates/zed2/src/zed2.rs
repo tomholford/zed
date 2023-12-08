@@ -127,12 +127,15 @@ pub fn initialize_workspace(app_state: Arc<AppState>, cx: &mut AppContext) {
         //     let vim_mode_indicator = cx.add_view(|cx| vim::ModeIndicator::new(cx));
         let feedback_button = cx
             .build_view(|_| feedback::deploy_feedback_button::DeployFeedbackButton::new(workspace));
+        let appearance_settings_button = cx
+            .build_view(|_| appearance::deploy_appearance::DeployAppearanceButton::new(workspace));
         //     let cursor_position = cx.add_view(|_| editor::items::CursorPosition::new());
         let cursor_position = cx.build_view(|_| editor::items::CursorPosition::new());
         workspace.status_bar().update(cx, |status_bar, cx| {
             status_bar.add_left_item(diagnostic_summary, cx);
             status_bar.add_left_item(activity_indicator, cx);
             status_bar.add_right_item(feedback_button, cx);
+            status_bar.add_right_item(appearance_settings_button, cx);
             // status_bar.add_right_item(copilot, cx);
             status_bar.add_right_item(copilot, cx);
             status_bar.add_right_item(active_buffer_language, cx);

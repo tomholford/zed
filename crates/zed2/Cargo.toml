@@ -18,6 +18,7 @@ path = "src/main.rs"
 ai = { package = "ai2", path = "../ai2"}
 audio = { package = "audio2", path = "../audio2" }
 activity_indicator = { package = "activity_indicator2", path = "../activity_indicator2"}
+appearance = { package = "appearance", path = "../appearance" }
 auto_update = { package = "auto_update2", path = "../auto_update2" }
 breadcrumbs = { package = "breadcrumbs2", path = "../breadcrumbs2" }
 call = { package = "call2", path = "../call2" }
