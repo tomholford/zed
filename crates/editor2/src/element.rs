@@ -1272,13 +1272,19 @@ impl EditorElement {
         let track_bounds = Bounds::from_corners(point(left, top), point(right, bottom));
         let thumb_bounds = Bounds::from_corners(point(left, thumb_top), point(right, thumb_bottom));
 
+        let thumb_bg = cx.theme().colors().scrollbar_thumb_background;
+        let thumb_border = cx.theme().colors().scrollbar_thumb_border;
+        let track_bg = cx.theme().colors().scrollbar_track_background;
+        let track_border = cx.theme().colors().scrollbar_track_border;
+
         if layout.show_scrollbars {
+            // Paint track
             cx.paint_quad(
                 track_bounds,
                 Corners::default(),
-                cx.theme().colors().scrollbar_track_background,
+                track_bg,
                 Edges::default(), // todo!("style.track.border")
-                cx.theme().colors().scrollbar_track_border,
+                track_border,
             );
             let scrollbar_settings = EditorSettings::get_global(cx).scrollbar;
             if layout.is_singleton && scrollbar_settings.selections {
@@ -1299,17 +1305,19 @@ impl EditorElement {
                         end_y = start_y + px(1.);
                     }
                     let bounds = Bounds::from_corners(point(left, start_y), point(right, end_y));
+
+                    // Paint highlights / matches
                     cx.paint_quad(
                         bounds,
                         Corners::default(),
                         cx.theme().status().info,
                         Edges {
                             top: Pixels::ZERO,
-                            right: px(1.),
+                            right: Pixels::ZERO,
                             bottom: Pixels::ZERO,
                             left: px(1.),
                         },
-                        cx.theme().colors().scrollbar_thumb_border,
+                        cx.theme().status().info,
                     );
                 }
             }
@@ -1342,32 +1350,35 @@ impl EditorElement {
                         DiffHunkStatus::Modified => cx.theme().status().modified,
                         DiffHunkStatus::Removed => cx.theme().status().deleted,
                     };
+
+                    // Paint git status indicators
                     cx.paint_quad(
                         bounds,
                         Corners::default(),
                         color,
                         Edges {
                             top: Pixels::ZERO,
-                            right: px(1.),
+                            right: Pixels::ZERO,
                             bottom: Pixels::ZERO,
                             left: px(1.),
                         },
-                        cx.theme().colors().scrollbar_thumb_border,
+                        color,
                     );
                 }
             }
 
+            // Paint thumb
             cx.paint_quad(
                 thumb_bounds,
                 Corners::default(),
                 cx.theme().colors().scrollbar_thumb_background,
                 Edges {
                     top: Pixels::ZERO,
-                    right: px(1.),
+                    right: Pixels::ZERO,
                     bottom: Pixels::ZERO,
                     left: px(1.),
                 },
-                cx.theme().colors().scrollbar_thumb_border,
+                cx.theme().colors().scrollbar_thumb_background,
             );
         }
 
