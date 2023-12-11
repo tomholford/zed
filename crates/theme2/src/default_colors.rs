@@ -63,9 +63,9 @@ impl ThemeColors {
             panel_background: neutral().light().step_2(),
             panel_focused_border: blue().light().step_5(),
             paragraph: neutral().light().step_12(),
-            scrollbar_thumb_background: neutral().light_alpha().step_3(),
+            scrollbar_thumb_background: neutral().light_alpha().step_4(),
             scrollbar_thumb_border: gpui::transparent_black(),
-            scrollbar_thumb_hover_background: neutral().light_alpha().step_4(),
+            scrollbar_thumb_hover_background: neutral().light_alpha().step_5(),
             scrollbar_track_background: gpui::transparent_black(),
             scrollbar_track_border: neutral().light().step_5(),
             search_match_background: neutral().light().step_2(), // todo!(this was inserted by Mikayla)

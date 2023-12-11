@@ -117,7 +117,7 @@ pub(crate) fn one_dark() -> Theme {
                 panel_background: bg,
                 panel_focused_border: blue,
                 pane_focused_border: blue,
-                scrollbar_thumb_background: gpui::transparent_black(),
+                scrollbar_thumb_background: hsla(223.0 / 360., 13. / 100., 21. / 100., 1.0),
                 scrollbar_thumb_hover_background: hsla(225.0 / 360., 11.8 / 100., 26.7 / 100., 1.0),
                 scrollbar_thumb_border: hsla(228. / 360., 8. / 100., 25. / 100., 1.),
                 scrollbar_track_background: gpui::transparent_black(),
