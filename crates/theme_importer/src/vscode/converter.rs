@@ -1,5 +1,5 @@
 use anyhow::Result;
-use gpui::rgba;
+use gpui::{hsla, rgba, Hsla};
 use indexmap::IndexMap;
 use strum::IntoEnumIterator;
 use theme::{
@@ -10,7 +10,7 @@ use theme::{
 use crate::color::try_parse_color;
 use crate::util::Traverse;
 use crate::vscode::{VsCodeTheme, VsCodeTokenScope};
-use crate::ThemeMetadata;
+use crate::{ThemeAppearanceJson, ThemeMetadata};
 
 use super::ZedSyntaxToken;
 
@@ -122,8 +122,64 @@ impl VsCodeThemeConverter {
     fn convert_theme_colors(&self) -> Result<ThemeColorsRefinement> {
         let vscode_colors = &self.theme.colors;
 
+        let appearance = self.theme_metadata.appearance;
+
+        let vscode_border_option_1 = vscode_colors
+            .tab_border
+            .as_ref()
+            .and_then(|color| try_parse_color(color).ok());
+
+        let vscode_border_option_2 = vscode_colors
+            .editor_group_border
+            .as_ref()
+            .and_then(|color| try_parse_color(color).ok());
+
+        let bg_colors: Vec<Hsla> = vec![
+            vscode_colors.editor_background.as_ref(),
+            vscode_colors.panel_background.as_ref(),
+            vscode_colors.side_bar_background.as_ref(),
+            vscode_colors.tab_active_background.as_ref(),
+            vscode_colors.tab_inactive_background.as_ref(),
+        ]
+        .into_iter()
+        .filter_map(|bg_color_option| {
+            bg_color_option
+                .as_ref()
+                .and_then(|color| try_parse_color(color).ok())
+        })
+        .collect::<Vec<Hsla>>();
+
+        let border_same_as_bg = vscode_border_option_1
+            .as_ref()
+            .map(|option_1| bg_colors.contains(option_1))
+            .unwrap_or(false)
+            || vscode_border_option_2
+                .as_ref()
+                .map(|option_2| bg_colors.contains(option_2))
+                .unwrap_or(false);
+
+        let fallback_light_border = hsla(0., 0., 0., 0.16);
+        let fallback_light_muted_border = hsla(0., 0., 0., 0.10);
+        let fallback_dark_border = hsla(0., 0., 0., 0.12);
+        let fallback_dark_muted_border = hsla(0., 0., 0., 0.8);
+
+        let border_colors = if border_same_as_bg
+            || vscode_border_option_1.is_none()
+            || vscode_border_option_2.is_none()
+        {
+            match appearance {
+                ThemeAppearanceJson::Light => [fallback_light_border, fallback_light_muted_border],
+                ThemeAppearanceJson::Dark => [fallback_dark_border, fallback_dark_muted_border],
+            }
+        } else {
+            [
+                vscode_border_option_1.unwrap(),
+                vscode_border_option_2.unwrap(),
+            ]
+        };
+
         let vscode_panel_border = vscode_colors
-            .panel_border
+            .tab_border
             .as_ref()
             .traverse(|color| try_parse_color(&color))?;
 
@@ -158,8 +214,8 @@ impl VsCodeThemeConverter {
             .flatten();
 
         Ok(ThemeColorsRefinement {
-            border: vscode_panel_border,
-            border_variant: vscode_panel_border,
+            border: Some(border_colors[0]),
+            border_variant: Some(border_colors[1]),
             border_focused: vscode_colors
                 .focus_border
                 .as_ref()
@@ -185,7 +241,7 @@ impl VsCodeThemeConverter {
                 .as_ref()
                 .traverse(|color| try_parse_color(&color))?,
             element_background: vscode_colors
-                .button_background
+                .input_background
                 .as_ref()
                 .traverse(|color| try_parse_color(&color))?,
             element_hover: vscode_colors

@@ -19,8 +19,8 @@ pub fn rose_pine() -> UserThemeFamily {
                 appearance: Appearance::Dark,
                 styles: UserThemeStylesRefinement {
                     colors: ThemeColorsRefinement {
-                        border: Some(rgba(0x00000000).into()),
-                        border_variant: Some(rgba(0x00000000).into()),
+                        border: Some(rgba(0x0000001f).into()),
+                        border_variant: Some(rgba(0x000000cc).into()),
                         border_focused: Some(rgba(0x6e6a8633).into()),
                         border_selected: Some(rgba(0x00000000).into()),
                         border_transparent: Some(rgba(0x00000000).into()),
@@ -28,7 +28,7 @@ pub fn rose_pine() -> UserThemeFamily {
                         elevated_surface_background: Some(rgba(0x1f1d2eff).into()),
                         surface_background: Some(rgba(0x1f1d2eff).into()),
                         background: Some(rgba(0x191724ff).into()),
-                        element_background: Some(rgba(0xebbcbaff).into()),
+                        element_background: Some(rgba(0x26233a80).into()),
                         element_hover: Some(rgba(0x6e6a861a).into()),
                         element_selected: Some(rgba(0x6e6a8633).into()),
                         drop_target_background: Some(rgba(0x1f1d2eff).into()),
@@ -279,8 +279,8 @@ pub fn rose_pine() -> UserThemeFamily {
                 appearance: Appearance::Dark,
                 styles: UserThemeStylesRefinement {
                     colors: ThemeColorsRefinement {
-                        border: Some(rgba(0x00000000).into()),
-                        border_variant: Some(rgba(0x00000000).into()),
+                        border: Some(rgba(0x0000001f).into()),
+                        border_variant: Some(rgba(0x000000cc).into()),
                         border_focused: Some(rgba(0x817c9c26).into()),
                         border_selected: Some(rgba(0x00000000).into()),
                         border_transparent: Some(rgba(0x00000000).into()),
@@ -288,7 +288,7 @@ pub fn rose_pine() -> UserThemeFamily {
                         elevated_surface_background: Some(rgba(0x2a273fff).into()),
                         surface_background: Some(rgba(0x2a273fff).into()),
                         background: Some(rgba(0x232136ff).into()),
-                        element_background: Some(rgba(0xea9a97ff).into()),
+                        element_background: Some(rgba(0x39355280).into()),
                         element_hover: Some(rgba(0x817c9c14).into()),
                         element_selected: Some(rgba(0x817c9c26).into()),
                         drop_target_background: Some(rgba(0x2a273fff).into()),
@@ -539,8 +539,8 @@ pub fn rose_pine() -> UserThemeFamily {
                 appearance: Appearance::Light,
                 styles: UserThemeStylesRefinement {
                     colors: ThemeColorsRefinement {
-                        border: Some(rgba(0x00000000).into()),
-                        border_variant: Some(rgba(0x00000000).into()),
+                        border: Some(rgba(0x00000029).into()),
+                        border_variant: Some(rgba(0x0000001a).into()),
                         border_focused: Some(rgba(0x6e6a8614).into()),
                         border_selected: Some(rgba(0x00000000).into()),
                         border_transparent: Some(rgba(0x00000000).into()),
@@ -548,7 +548,7 @@ pub fn rose_pine() -> UserThemeFamily {
                         elevated_surface_background: Some(rgba(0xfffaf3ff).into()),
                         surface_background: Some(rgba(0xfffaf3ff).into()),
                         background: Some(rgba(0xfaf4edff).into()),
-                        element_background: Some(rgba(0xd7827eff).into()),
+                        element_background: Some(rgba(0xf2e9e180).into()),
                         element_hover: Some(rgba(0x6e6a860d).into()),
                         element_selected: Some(rgba(0x6e6a8614).into()),
                         drop_target_background: Some(rgba(0xfffaf3ff).into()),

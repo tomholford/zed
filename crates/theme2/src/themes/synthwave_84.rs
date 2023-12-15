@@ -18,10 +18,15 @@ pub fn synthwave_84() -> UserThemeFamily {
             appearance: Appearance::Dark,
             styles: UserThemeStylesRefinement {
                 colors: ThemeColorsRefinement {
+                    border: Some(rgba(0x241b2f00).into()),
+                    border_variant: Some(rgba(0x495495ff).into()),
                     border_focused: Some(rgba(0x1f212bff).into()),
+                    border_selected: Some(rgba(0x241b2f00).into()),
+                    border_transparent: Some(rgba(0x241b2f00).into()),
+                    border_disabled: Some(rgba(0x241b2f00).into()),
                     elevated_surface_background: Some(rgba(0x232530ff).into()),
                     background: Some(rgba(0x262335ff).into()),
-                    element_background: Some(rgba(0x614d85ff).into()),
+                    element_background: Some(rgba(0x2a2139ff).into()),
                     element_hover: Some(rgba(0x37294d99).into()),
                     element_selected: Some(rgba(0xffffff20).into()),
                     drop_target_background: Some(rgba(0x34294f66).into()),

@@ -9342,12 +9342,14 @@ impl Render for Editor {
                 inlays_style: HighlightStyle {
                     color: Some(cx.theme().status().hint),
                     font_weight: Some(FontWeight::BOLD),
+                    // todo!("We should set the correct color in the theme instead of relying on fade_out")
                     fade_out: Some(0.6),
                     ..HighlightStyle::default()
                 },
                 suggestions_style: HighlightStyle {
                     color: Some(cx.theme().status().predictive),
-                    fade_out: Some(0.6),
+                    font_style: Some(FontStyle::Italic),
+                    background_color: Some(cx.theme().colors().element_background),
                     ..HighlightStyle::default()
                 },
             },
