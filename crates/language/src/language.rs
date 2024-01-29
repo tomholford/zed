@@ -681,6 +681,7 @@ struct InjectionConfig {
 #[derive(Debug)]
 struct OverrideConfig {
     query: Query,
+    close_bracket_only_in: Option<Query>,
     values: HashMap<u32, (String, LanguageConfigOverride)>,
 }
 
@@ -1520,6 +1521,8 @@ impl Language {
     }
 
     pub fn with_override_query(mut self, source: &str) -> anyhow::Result<Self> {
+        // TODO kb this comes with all overrides, but we need to split them by step-back/not-step-back criteria
+        dbg!(source);
         let query = Query::new(&self.grammar_mut().ts_language, source)?;
 
         let mut override_configs_by_id = HashMap::default();
@@ -1601,6 +1604,7 @@ impl Language {
         self.grammar_mut().override_config = Some(OverrideConfig {
             query,
             values: override_configs_by_id,
+            close_bracket_only_in: None, // TODO kb
         });
         Ok(self)
     }
@@ -1799,7 +1803,7 @@ impl LanguageScope {
                 }
 
                 let forced_close_scopes = &bracket_config.forced_close_scopes_by_bracket_ix[ix];
-                dbg!(&forced_close_ids, &forced_close_scopes);
+                dbg!((&forced_close_ids, &forced_close_scopes));
                 // let mut close_enabled = pair.close && forced_close_scopes.is_empty();
                 let mut close_enabled = pair.close && forced_close_scopes.is_empty();
                 if let Some(next_forced_close_ix) = forced_close_ids.first() {
